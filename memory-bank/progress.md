@@ -24,11 +24,15 @@ This document tracks the progress of the Sichuan Mahjong implementation accordin
   - *Completed on: March 14, 2025*
 
 ## Phase 2: Game Logic Implementation
-- [ ] Step 4: Create Tile System
+- [x] Step 4: Create Tile System
   - **Preparation**: Added mahjong-tileset assets folder with tile images in multiple resolutions (64px, 96px, 128px, 618px)
-  - Tileset includes complete set of Mahjong tiles (bamboo, circle, character, seasons, flowers)
-  - Assets licensed under CC BY 3.0 by Code Inferno
-  - *Preparation completed on: March 14, 2025*
+  - Implemented `tile.gd` class defining tile properties, types, and comparison methods
+  - Created `tile_asset_manager.gd` to handle mapping and loading of tile textures
+  - Developed `tile_manager.gd` for managing tile creation, shuffling, and distribution
+  - Created `tile.tscn` scene for displaying and interacting with tiles
+  - Implemented `tile_display.gd` for tile selection/highlighting behaviors
+  - Added test scene for validating tile system implementation
+  - *Completed on: March 14, 2025*
 
 - [ ] Step 5: Implement Player Hand Management
 - [ ] Step 6: Implement Game Rules

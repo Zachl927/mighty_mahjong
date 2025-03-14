@@ -1,0 +1,110 @@
+[gd_scene load_steps=2 format=3 uid="uid://dm6yuu8awoxrc"]
+
+[ext_resource type="Script" uid="uid://b7jfu6bu2crsr" path="res://tests/test_tile_system.gd" id="1_7fwg0"]
+
+[node name="TestTileSystem" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7fwg0")
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.9
+offset_bottom = -0.200012
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 0
+metadata/_edit_layout_mode = 1
+
+[node name="AllTiles" type="MarginContainer" parent="TabContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+metadata/_tab_index = 0
+
+[node name="StatusLabel" type="Label" parent="TabContainer/AllTiles"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Loading tiles..."
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/AllTiles"]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+
+[node name="TilesGrid" type="GridContainer" parent="TabContainer/AllTiles/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
+columns = 12
+
+[node name="DistributionTest" type="MarginContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+metadata/_tab_index = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/DistributionTest"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Controls" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.9
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 16
+alignment = 1
+metadata/_edit_layout_mode = 1
+
+[node name="Label" type="Label" parent="Controls"]
+layout_mode = 2
+text = "Tile Size:"
+
+[node name="SizeOption" type="OptionButton" parent="Controls"]
+layout_mode = 2
+selected = 2
+item_count = 4
+popup/item_0/text = "64"
+popup/item_0/id = 64
+popup/item_1/text = "96"
+popup/item_1/id = 96
+popup/item_2/text = "128"
+popup/item_2/id = 128
+popup/item_3/text = "618"
+popup/item_3/id = 618
+
+[node name="ShuffleButton" type="Button" parent="Controls"]
+layout_mode = 2
+text = "Shuffle Tiles"
+
+[node name="Label2" type="Label" parent="Controls"]
+layout_mode = 2
+text = "Players:"
+
+[node name="PlayerCountSpinner" type="SpinBox" parent="Controls"]
+layout_mode = 2
+min_value = 2.0
+max_value = 4.0
+value = 4.0
+rounded = true
+
+[node name="DistributeButton" type="Button" parent="Controls"]
+layout_mode = 2
+text = "Distribute Tiles"

@@ -30,19 +30,25 @@ mighty_mahjong/
 │   ├── main.tscn         # Main entry scene
 │   ├── test_scene.tscn   # Project validation test scene
 │   ├── test_game_state_manager.tscn  # Game state manager validation
-│   └── test_ui_framework.tscn  # UI framework validation
+│   ├── test_ui_framework.tscn  # UI framework validation
+│   └── test_tile_system.tscn  # Tile system validation
 ├── scripts/              # GDScript files
 │   ├── core/             # Core game functionality
-│   │   └── game_state_manager.gd  # State machine implementation
+│   │   ├── game_state_manager.gd  # State machine implementation
+│   │   ├── tile.gd        # Tile class definition
+│   │   ├── tile_asset_manager.gd  # Tile asset management
+│   │   └── tile_manager.gd  # Tile creation and handling
 │   ├── ui/               # User interface scripts
 │   │   ├── main.gd       # Main scene logic (initial)
-│   │   └── main_ui_controller.gd  # Main UI controller for navigation and state management
+│   │   ├── main_ui_controller.gd  # Main UI controller for navigation and state management
+│   │   └── tile_display.gd  # Tile display and interaction
 │   ├── networking/       # Networking components
 │   └── data/             # Data persistence
 ├── resources/            # Resource files
 └── tests/                # Test scripts
     ├── test_project_setup.gd  # Project structure validation
-    └── test_game_state_manager.gd  # State machine test script
+    ├── test_game_state_manager.gd  # State machine test script
+    └── test_tile_system.gd  # Tile system test script
 ```
 
 ## Implemented Components
@@ -89,33 +95,6 @@ mighty_mahjong/
   - Updates UI elements based on game state changes
 - **Implementation**: Uses Godot's signals to connect UI elements with game logic (follows Windsurf Rule #9)
 
-### Game State Manager Test
-- **Files**: 
-  - `scenes/test_game_state_manager.tscn`
-  - `tests/test_game_state_manager.gd`
-- **Purpose**: Validates the functionality of the Game State Manager
-- **Features**:
-  - Displays the current game state
-  - Provides UI buttons to test transitions between all states
-  - Shows state transition logs in the console
-- **Implementation**: Uses Godot's Control nodes and signals to demonstrate state machine functionality
-
-### UI Framework Test
-- **File**: `scenes/test_ui_framework.tscn`
-- **Purpose**: Validates the UI layout and navigation
-- **Features**:
-  - Tests main menu layout and button functionality
-  - Validates game screen layout with player hands, discard area, and action buttons
-  - Tests chat functionality
-  - Verifies screen transitions based on game state
-- **Implementation**: Loads the main scene and adds test instructions panel
-
-### Test Framework
-- **File**: `tests/test_project_setup.gd` 
-- **Purpose**: Validates project structure meets requirements
-- **Validation**: Checks directories, project configuration, window size
-- **Implementation**: Uses Godot's file system access to verify structure
-
 ### Mahjong Tile Assets
 - **Directory**: `assets/mahjong-tileset/`
 - **Purpose**: Provides image assets for the tile system implementation
@@ -146,13 +125,81 @@ mighty_mahjong/
   - Label-only versions provide options for custom styling or performance optimization
   - High-resolution (618px) tiles can be used for close-up views or animations
 
-## Pending Components
-
 ### Tile System
-- **File**: `scripts/core/tile.gd`
-- **Purpose**: Defines tile properties and behavior
-- **Related Files**: `scripts/core/tile_manager.gd` (handles tile generation and distribution)
-- **Assets**: Will use the mahjong-tileset assets in assets directory
+- **Components**:
+  - **Tile Class** (`scripts/core/tile.gd`)
+    - **Purpose**: Defines properties and behaviors of individual mahjong tiles
+    - **Features**:
+      - Type enums for categorizing tiles (Suit, Honor, Bonus)
+      - Properties for storing tile metadata (type, value, texture)
+      - Methods for comparison and identification
+      - Support for sorting and matching
+    - **Design Pattern**: Resource-based class design
+  
+  - **Tile Asset Manager** (`scripts/core/tile_asset_manager.gd`)
+    - **Purpose**: Manages loading and mapping of tile textures
+    - **Features**:
+      - Support for multiple resolution tile sets (64px, 96px, 128px, 618px)
+      - Systematic mapping of tile types to corresponding images
+      - Preloading of textures for efficient access
+      - Dynamic changing of tile sizes
+    - **Implementation**: Uses Godot's resource loading system
+  
+  - **Tile Manager** (`scripts/core/tile_manager.gd`)
+    - **Purpose**: Manages the creation and handling of the complete set of tiles
+    - **Features**:
+      - Creates all 144 mahjong tiles according to Sichuan rules
+      - Manages the wall (draw pile) with proper shuffling
+      - Handles tile drawing and distribution to players
+      - Emits signals for game events (wall creation, tile distribution)
+    - **Implementation**: Follows Observer pattern using signals (Windsurf Rule #9)
+  
+  - **Tile Display** (`scripts/ui/tile_display.gd` and `scenes/tile.tscn`)
+    - **Purpose**: Provides visual representation and interaction for tiles
+    - **Features**:
+      - Highlight and selection effects for tiles
+      - Signals for tile selection and hover events
+      - Visual feedback for player interactions
+      - Customizable appearance properties
+    - **Implementation**: Extends TextureButton for interactive tile display
+  
+  - **Tile System Test** (`scenes/test_tile_system.tscn` and `tests/test_tile_system.gd`)
+    - **Purpose**: Validates the tile system implementation
+    - **Features**:
+      - Display of all 144 tiles with correct textures
+      - Testing of tile shuffling
+      - Distribution of tiles to 2-4 players
+      - Dynamic changing of tile resolutions
+    - **Implementation**: Provides comprehensive testing of all tile system components
+
+### Game State Manager Test
+- **Files**: 
+  - `scenes/test_game_state_manager.tscn`
+  - `tests/test_game_state_manager.gd`
+- **Purpose**: Validates the functionality of the Game State Manager
+- **Features**:
+  - Displays the current game state
+  - Provides UI buttons to test transitions between all states
+  - Shows state transition logs in the console
+- **Implementation**: Uses Godot's Control nodes and signals to demonstrate state machine functionality
+
+### UI Framework Test
+- **File**: `scenes/test_ui_framework.tscn`
+- **Purpose**: Validates the UI layout and navigation
+- **Features**:
+  - Tests main menu layout and button functionality
+  - Validates game screen layout with player hands, discard area, and action buttons
+  - Tests chat functionality
+  - Verifies screen transitions based on game state
+- **Implementation**: Loads the main scene and adds test instructions panel
+
+### Test Framework
+- **File**: `tests/test_project_setup.gd` 
+- **Purpose**: Validates project structure meets requirements
+- **Validation**: Checks directories, project configuration, window size
+- **Implementation**: Uses Godot's file system access to verify structure
+
+## Pending Components
 
 ### Player Management
 - **File**: `scripts/core/player_hand.gd`
