@@ -36,10 +36,10 @@ This document tracks the progress of the Sichuan Mahjong implementation accordin
 
 - [x] Step 5: Implement Player Hand Management 
   - Created `player_hand.gd` script to manage the player's hand, including:
-    - Methods for adding, removing, and sorting tiles
-    - Functions to identify potential sets (Pongs, Kongs, Chows)
-    - Logic for forming sets with discarded tiles
-    - Tracking exposed sets and checking for winning conditions
+	- Methods for adding, removing, and sorting tiles
+	- Functions to identify potential sets (Pongs, Kongs, Chows)
+	- Logic for forming sets with discarded tiles
+	- Tracking exposed sets and checking for winning conditions
   - Developed `player_hand.tscn` scene for visual representation
   - Implemented `player_hand_display.gd` for UI interaction
   - Created and tested with `test_player_hand.tscn` scene
@@ -47,7 +47,16 @@ This document tracks the progress of the Sichuan Mahjong implementation accordin
   - Enhanced player hand display with multi-tile selection functionality
   - *Completed on: March 14, 2025*
 
-- [ ] Step 6: Implement Game Rules
+- [x] Step 6: Implement Game Rules
+  - Created `game_rules.gd` script to implement Sichuan Mahjong rules, including:
+    - Action validation (draw, discard, claim, win)
+    - Suit restriction validation (max 2 suits per hand)
+    - Winning pattern validation
+  - Implemented test files for game rules validation
+  - Fixed suit restriction validation logic to correctly check suit_type instead of tile type
+  - Fixed action validation method signatures to ensure consistent parameter naming
+  - Created comprehensive test cases to verify rule implementation
+  - *Partially completed on: March 14, 2025*
 
 ## Phase 3: Networking Implementation
 - [ ] Step 7: Set Up Basic Networking

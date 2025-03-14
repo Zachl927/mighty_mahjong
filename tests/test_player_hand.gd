@@ -151,10 +151,10 @@ func _on_add_specific_sets_button_pressed():
 		tile_manager.get_asset_manager().set_tile_texture(tile)
 		chow_tiles.append(tile)
 	
-	# Add a pair (for potential winning hand)
+	# Add a pair (for potential winning hand) - using PINYIN suit instead of honor tiles
 	var pair_tiles = []
 	for _i in range(2):
-		var tile = Tile.new(Tile.TileType.HONOR, -1, Tile.HonorType.DRAGON_RED)
+		var tile = Tile.new(Tile.TileType.SUIT, 7, Tile.SuitType.PINYIN)
 		tile_manager.get_asset_manager().set_tile_texture(tile)
 		pair_tiles.append(tile)
 	
@@ -168,7 +168,7 @@ func _on_add_specific_sets_button_pressed():
 	for tile in pair_tiles:
 		player_hand.add_tile(tile)
 	
-	update_info_text("Added test sets to hand: 1 Pong (Bamboo 5), 1 Chow (Circle 2-4), and 1 Pair (Dragon Red)")
+	update_info_text("Added test sets to hand: 1 Pong (Bamboo 5), 1 Chow (Circle 2-4), and 1 Pair (Pinyin 7)")
 
 # Try to form a set with the selected tile
 func _on_form_set_button_pressed():
@@ -199,60 +199,49 @@ func _on_form_set_button_pressed():
 		discard_tile = set_tiles[0]
 		
 		# Remove that tile from hand first (simulating it was discarded by another player)
-		for i in range(player_hand.get_tile_count()):
-			if player_hand.get_tile_at(i).tile_id == discard_tile.tile_id:
-				player_hand.remove_tile_at(i)
-				break
+		player_hand.remove_tile_by_id(discard_tile.tile_id)
 		
-		# Form the set
-		var formed_set = player_hand.form_set(discard_tile, set_to_form.type)
-		
-		if formed_set.size() > 0:
-			var set_type_name = ""
-			match set_to_form.type:
-				PlayerHand.SetType.PONG: set_type_name = "Pong"
-				PlayerHand.SetType.KONG: set_type_name = "Kong"
-				PlayerHand.SetType.CHOW: set_type_name = "Chow"
-			
-			update_info_text("Formed a " + set_type_name + " set!")
+		# Now try to form the set
+		var success = player_hand.form_set(set_to_form.type, discard_tile)
+		if success:
+			update_info_text("Successfully formed " + set_type_to_string(set_to_form.type) + " set with " + discard_tile.get_tile_name())
 		else:
-			update_info_text("Failed to form set!")
+			# If failed, add the tile back
+			player_hand.add_tile(discard_tile)
+			update_info_text("Failed to form set with " + discard_tile.get_tile_name())
 	else:
-		update_info_text("No potential set found with the selected tile!")
+		update_info_text("Selected tile is not part of any potential set.")
 
-# Clear the player's hand
-func _on_clear_hand_button_pressed():
-	while player_hand.get_tile_count() > 0:
-		player_hand.remove_tile_at(0)
-	
-	# Clear selections
-	selected_tile_index = -1
-	selected_indices.clear()
-	player_hand_display.clear_selections()
-	
-	update_info_text("Hand cleared!")
-
-# Handle single tile selection
-func _on_tile_selected(tile: Tile, index: int):
+# Handle tile selection
+func _on_tile_selected(index):
 	selected_tile_index = index
-	update_info_text("Selected tile: " + tile.get_tile_name() + " (index: " + str(index) + ")")
+	update_info_text("Selected tile at index " + str(index) + ": " + player_hand.get_tile_at(index).get_tile_name())
 
-# Handle multi-tile selection changes
-func _on_tiles_selection_changed(indices: Array):
+# Handle multiple tile selection
+func _on_tiles_selection_changed(indices):
 	selected_indices = indices
 	
-	# Update UI based on selection
-	var message = ""
-	if indices.size() == 0:
-		message = "No tiles selected"
-	elif indices.size() == 1:
-		var tile = player_hand.get_tile_at(indices[0])
-		message = "Selected tile: " + tile.get_tile_name() + " (index: " + str(indices[0]) + ")"
+	var message = "Selected " + str(indices.size()) + " tile(s): "
+	for i in range(indices.size()):
+		if i > 0:
+			message += ", "
+		message += player_hand.get_tile_at(indices[i]).get_tile_name()
+	
+	if indices.size() > 0:
+		selected_tile_index = indices[0]  # For backward compatibility
 	else:
-		message = "Selected " + str(indices.size()) + " tiles"
+		selected_tile_index = -1
 	
 	update_info_text(message)
 
-# Helper function to update the information panel
-func update_info_text(text: String):
+# Update the info text label
+func update_info_text(text):
 	$MainContainer/InfoPanel/VBoxContainer/InfoTextEdit.text = text
+
+# Convert set type to string
+func set_type_to_string(set_type):
+	match set_type:
+		PlayerHand.SetType.PONG: return "Pong"
+		PlayerHand.SetType.KONG: return "Kong"
+		PlayerHand.SetType.CHOW: return "Chow"
+		_: return "Unknown"

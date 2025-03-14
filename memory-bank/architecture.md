@@ -248,6 +248,33 @@ The Player Hand Management system handles all aspects of a player's mahjong tile
    - Comprehensive test scene to validate functionality
    - Test utilities for various hand configurations
 
+### Module: Game Rules
+
+The Game Rules module implements the specific rules of Sichuan Mahjong, ensuring proper gameplay mechanics and validation.
+
+#### Components:
+
+1. **GameRules (`scripts/core/game_rules.gd`)**:
+   - **Purpose**: Defines and enforces the rules specific to Sichuan Mahjong.
+   - **Features**:
+     - Action validation for all game moves (draw, discard, claim, win)
+     - Suit restriction validation (max 2 suits per hand)
+     - Winning pattern validation
+     - Constants for game-specific rules (e.g., MAX_SUITS_PER_HAND = 2)
+   - **Implementation Details**:
+     - Uses modular validation methods for each action type
+     - Implements unified `validate_action` method as public API
+     - Ensures proper validation of 2-suit restriction by checking tile.suit_type
+   - **Dependencies**: Tile, PlayerHand
+
+2. **Game Rules Tests (`tests/test_game_rules.gd`)**:
+   - **Purpose**: Validates the correct implementation of game rules.
+   - **Features**:
+     - Test cases for all action types
+     - Validation of suit restrictions (2-suit rule)
+     - Tests for winning patterns
+   - **Implementation**: Uses Godot's built-in test framework
+
 ### Game State Manager Test
 - **Files**: 
   - `scenes/test_game_state_manager.tscn`
@@ -281,10 +308,6 @@ The Player Hand Management system handles all aspects of a player's mahjong tile
 - **File**: `scripts/core/player_hand.gd`
 - **Purpose**: Manages player's tiles and legal actions
 - **Scene**: `scenes/player_hand.tscn`
-
-### Game Rules
-- **File**: `scripts/core/game_rules.gd`
-- **Purpose**: Implements Sichuan Mahjong rules and validates player actions
 
 ### Networking Components
 
