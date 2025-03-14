@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://dhw3d2yxvdpw7"]
+[gd_scene load_steps=2 format=3 uid="uid://dhw3d2yxvdpw7"]
+
+[ext_resource type="Script" path="res://scripts/ui/main_ui_controller.gd" id="1_h1w5f"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -7,19 +9,245 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_h1w5f")
 
-[node name="Label" type="Label" parent="."]
+[node name="MainMenu" type="VBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -135.0
-offset_top = -11.5
-offset_right = 135.0
-offset_bottom = 11.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="TitleContainer" type="MarginContainer" parent="MainMenu"]
+layout_mode = 2
+theme_override_constants/margin_top = 50
+
+[node name="TitleLabel" type="Label" parent="MainMenu/TitleContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
 text = "Mighty Mahjong - Sichuan Rules"
 horizontal_alignment = 1
+
+[node name="Spacer1" type="Control" parent="MainMenu"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="MainMenu"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 20
+
+[node name="HostGameButton" type="Button" parent="MainMenu/ButtonsContainer"]
+custom_minimum_size = Vector2(250, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Host Game"
+
+[node name="JoinGameButton" type="Button" parent="MainMenu/ButtonsContainer"]
+custom_minimum_size = Vector2(250, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Join Game"
+
+[node name="SettingsButton" type="Button" parent="MainMenu/ButtonsContainer"]
+custom_minimum_size = Vector2(250, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Settings"
+
+[node name="QuitButton" type="Button" parent="MainMenu/ButtonsContainer"]
+custom_minimum_size = Vector2(250, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Quit"
+
+[node name="GameScreen" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameArea" type="Control" parent="GameScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopBar" type="HBoxContainer" parent="GameScreen/GameArea"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 50.0
+grow_horizontal = 2
+
+[node name="GameInfoLabel" type="Label" parent="GameScreen/GameArea/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Round: 1 | East Wind"
+vertical_alignment = 1
+
+[node name="MenuButton" type="Button" parent="GameScreen/GameArea/TopBar"]
+layout_mode = 2
+text = "Menu"
+
+[node name="CenterContainer" type="MarginContainer" parent="GameScreen/GameArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 50.0
+offset_bottom = -150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DiscardPile" type="GridContainer" parent="GameScreen/GameArea/CenterContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/h_separation = 5
+theme_override_constants/v_separation = 5
+columns = 6
+
+[node name="PlaceholderLabel" type="Label" parent="GameScreen/GameArea/CenterContainer/DiscardPile"]
+layout_mode = 2
+text = "Discard Pile"
+
+[node name="PlayerHands" type="Control" parent="GameScreen/GameArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopPlayerHand" type="HBoxContainer" parent="GameScreen/GameArea/PlayerHands"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 60.0
+offset_bottom = 100.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="PlaceholderLabel" type="Label" parent="GameScreen/GameArea/PlayerHands/TopPlayerHand"]
+layout_mode = 2
+text = "Top Player Hand"
+
+[node name="LeftPlayerHand" type="VBoxContainer" parent="GameScreen/GameArea/PlayerHands"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_vertical = 2
+alignment = 1
+
+[node name="PlaceholderLabel" type="Label" parent="GameScreen/GameArea/PlayerHands/LeftPlayerHand"]
+layout_mode = 2
+text = "Left Player Hand"
+
+[node name="RightPlayerHand" type="VBoxContainer" parent="GameScreen/GameArea/PlayerHands"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -100.0
+offset_bottom = 100.0
+grow_horizontal = 0
+grow_vertical = 2
+alignment = 1
+
+[node name="PlaceholderLabel" type="Label" parent="GameScreen/GameArea/PlayerHands/RightPlayerHand"]
+layout_mode = 2
+text = "Right Player Hand"
+
+[node name="BottomPlayerHand" type="HBoxContainer" parent="GameScreen/GameArea/PlayerHands"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -180.0
+offset_bottom = -150.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="PlaceholderLabel" type="Label" parent="GameScreen/GameArea/PlayerHands/BottomPlayerHand"]
+layout_mode = 2
+text = "Bottom Player Hand (You)"
+
+[node name="ActionButtons" type="HBoxContainer" parent="GameScreen/GameArea"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -100.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="DrawButton" type="Button" parent="GameScreen/GameArea/ActionButtons"]
+layout_mode = 2
+text = "Draw"
+
+[node name="DiscardButton" type="Button" parent="GameScreen/GameArea/ActionButtons"]
+layout_mode = 2
+text = "Discard"
+
+[node name="PongButton" type="Button" parent="GameScreen/GameArea/ActionButtons"]
+layout_mode = 2
+text = "Pong"
+
+[node name="KongButton" type="Button" parent="GameScreen/GameArea/ActionButtons"]
+layout_mode = 2
+text = "Kong"
+
+[node name="ChowButton" type="Button" parent="GameScreen/GameArea/ActionButtons"]
+layout_mode = 2
+text = "Chow"
+
+[node name="MahjongButton" type="Button" parent="GameScreen/GameArea/ActionButtons"]
+layout_mode = 2
+text = "Mahjong!"
+
+[node name="ChatArea" type="VBoxContainer" parent="GameScreen"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -150.0
+offset_right = 300.0
+grow_vertical = 0
+
+[node name="ChatLog" type="RichTextLabel" parent="GameScreen/ChatArea"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Game chat will appear here..."
+
+[node name="ChatInput" type="HBoxContainer" parent="GameScreen/ChatArea"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="GameScreen/ChatArea/ChatInput"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Type message..."
+
+[node name="SendButton" type="Button" parent="GameScreen/ChatArea/ChatInput"]
+layout_mode = 2
+text = "Send"

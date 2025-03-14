@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5hgvd4gahqmd"]
+
+[ext_resource type="PackedScene" uid="uid://dhw3d2yxvdpw7" path="res://scenes/main.tscn" id="1_tqvjm"]
+
+[node name="TestUIFramework" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Main" parent="." instance=ExtResource("1_tqvjm")]
+layout_mode = 1
+
+[node name="TestInstructions" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_right = 300.0
+offset_bottom = 120.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TestInstructions"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TestInstructions/VBoxContainer"]
+layout_mode = 2
+text = "UI Framework Test"
+horizontal_alignment = 1
+
+[node name="InstructionsLabel" type="RichTextLabel" parent="TestInstructions/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Test Instructions:
+1. Verify Main Menu shows properly
+2. Test Host/Join Game buttons
+3. Verify Game Screen layout
+4. Test menu navigation
+5. Verify Chat functionality"

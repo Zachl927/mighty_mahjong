@@ -28,6 +28,7 @@ func _ready():
 	
 	print("Game State Manager Test initialized")
 
+@warning_ignore("unused_parameter")
 func _on_state_changed(from_state, to_state):
 	_update_state_label()
 

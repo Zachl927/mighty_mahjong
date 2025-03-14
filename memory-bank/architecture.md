@@ -9,17 +9,21 @@ mighty_mahjong/
 ├── assets/               # Game assets (images, sounds, etc.)
 ├── scenes/               # Godot scenes
 │   ├── main.tscn         # Main entry scene
-│   └── test_scene.tscn   # Validation test scene
+│   ├── test_scene.tscn   # Project validation test scene
+│   ├── test_game_state_manager.tscn  # Game state manager validation
+│   └── test_ui_framework.tscn  # UI framework validation
 ├── scripts/              # GDScript files
 │   ├── core/             # Core game functionality
 │   │   └── game_state_manager.gd  # State machine implementation
 │   ├── ui/               # User interface scripts
-│   │   └── main.gd       # Main scene logic
+│   │   ├── main.gd       # Main scene logic (initial)
+│   │   └── main_ui_controller.gd  # Main UI controller for navigation and state management
 │   ├── networking/       # Networking components
 │   └── data/             # Data persistence
 ├── resources/            # Resource files
 └── tests/                # Test scripts
-    └── test_project_setup.gd  # Project structure validation
+    ├── test_project_setup.gd  # Project structure validation
+    └── test_game_state_manager.gd  # State machine test script
 ```
 
 ## Implemented Components
@@ -33,27 +37,65 @@ mighty_mahjong/
 ### Main Scene
 - **File**: `scenes/main.tscn`
 - **Purpose**: Entry point for the application
-- **Components**: Basic Control node structure with title label
-- **Current State**: Minimal implementation for project validation
+- **Components**: 
+  - MainMenu (VBoxContainer) - Menu navigation and game setup options
+  - GameScreen (Control) - Contains game area and chat components
+  - GameArea (Control) - Contains gameplay elements
+  - PlayerHands (Control with child containers) - Areas for displaying player tiles
+  - DiscardPile (GridContainer) - Area for displaying discarded tiles
+  - ActionButtons (HBoxContainer) - Game action controls
+  - ChatArea (VBoxContainer) - In-game chat functionality
+- **Current State**: Full UI framework implementation with navigation
 
 ### Game State Manager
 - **File**: `scripts/core/game_state_manager.gd`
 - **Purpose**: Manages game states and transitions between them
 - **States**: MENU, WAITING, SETUP, PLAYING, SCORING, GAME_OVER
-- **Implementation**: Uses enum for state definition, provides state transition methods
+- **Implementation**: 
+  - Uses enum for state definition
+  - Provides state transition methods with proper enter/exit actions
+  - Maintains game data including players, rounds, and session information
+  - Emits signals for various game events (player join/leave, game start/end, etc.)
+  - Includes helper methods for common game operations
 - **Design Pattern**: State Machine (follows Windsurf Rule #8)
+
+### UI Controller
+- **File**: `scripts/ui/main_ui_controller.gd`
+- **Purpose**: Manages UI navigation and interaction with game state
+- **Features**:
+  - Connects UI elements to game state manager
+  - Handles state-based UI transitions
+  - Manages chat functionality
+  - Processes user input and game actions
+  - Updates UI elements based on game state changes
+- **Implementation**: Uses Godot's signals to connect UI elements with game logic (follows Windsurf Rule #9)
+
+### Game State Manager Test
+- **Files**: 
+  - `scenes/test_game_state_manager.tscn`
+  - `tests/test_game_state_manager.gd`
+- **Purpose**: Validates the functionality of the Game State Manager
+- **Features**:
+  - Displays the current game state
+  - Provides UI buttons to test transitions between all states
+  - Shows state transition logs in the console
+- **Implementation**: Uses Godot's Control nodes and signals to demonstrate state machine functionality
+
+### UI Framework Test
+- **File**: `scenes/test_ui_framework.tscn`
+- **Purpose**: Validates the UI layout and navigation
+- **Features**:
+  - Tests main menu layout and button functionality
+  - Validates game screen layout with player hands, discard area, and action buttons
+  - Tests chat functionality
+  - Verifies screen transitions based on game state
+- **Implementation**: Loads the main scene and adds test instructions panel
 
 ### Test Framework
 - **File**: `tests/test_project_setup.gd` 
 - **Purpose**: Validates project structure meets requirements
 - **Validation**: Checks directories, project configuration, window size
 - **Implementation**: Uses Godot's file system access to verify structure
-
-### UI Components
-- **File**: `scripts/ui/main.gd`
-- **Purpose**: Handles main scene logic
-- **Current State**: Minimal implementation with debug output
-- **Future Expansion**: Will be extended to handle menu navigation and scene transitions
 
 ## Pending Components
 
@@ -73,20 +115,14 @@ mighty_mahjong/
 
 ### Networking Components
 
-### Network Manager
+#### Network Manager
 - **File**: `scripts/networking/network_manager.gd`
 - **Purpose**: Handles network connections using ENet
 - **Scene**: `scenes/network_manager.tscn`
 
-### State Synchronization
+#### State Synchronization
 - **File**: `scripts/networking/state_sync.gd`
 - **Purpose**: Ensures game state consistency across clients
-
-### UI Components
-
-### Game UI
-- **Scene**: `scenes/game_area.tscn`
-- **Purpose**: Contains game board, tiles, and player information
 
 ## Data Persistence
 
@@ -105,6 +141,9 @@ Used for game state management to organize transitions between different game ph
 
 ### Observer Pattern (Signals)
 The game_state_manager.gd utilizes Godot's signal system to notify about state changes, following Windsurf Rule #9 on using signals and slots for event handling.
+
+### Modular UI Structure
+Following Windsurf Rule #6, the UI is built with reusable components, organized in a hierarchical structure for maintainability and flexibility.
 
 ### Component-Based Architecture
 Following Windsurf Rule #2, the project structure is designed to avoid a monolithic codebase through modularity, with each component having a single responsibility.
