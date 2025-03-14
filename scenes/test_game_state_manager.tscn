@@ -1,0 +1,103 @@
+[gd_scene load_steps=3 format=3 uid="uid://crsqdtpgnutdw"]
+
+[ext_resource type="Script" uid="uid://wgkuvd54u27a" path="res://tests/test_game_state_manager.gd" id="1_htmx0"]
+[ext_resource type="Script" uid="uid://b0vwjv00nv5d2" path="res://scripts/core/game_state_manager.gd" id="2_cgm8o"]
+
+[node name="TestGameStateManager" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_htmx0")
+
+[node name="GameStateManager" type="Node" parent="."]
+script = ExtResource("2_cgm8o")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Game State Manager Test"
+horizontal_alignment = 1
+
+[node name="Spacer1" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="StateLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Current State: MENU"
+horizontal_alignment = 1
+
+[node name="Spacer2" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="InstructionLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Click a button to change state:"
+horizontal_alignment = 1
+
+[node name="Spacer3" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="ButtonsContainer" type="GridContainer" parent="VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="MenuButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+text = "MENU"
+
+[node name="WaitingButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+text = "WAITING"
+
+[node name="SetupButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+text = "SETUP"
+
+[node name="PlayingButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+text = "PLAYING"
+
+[node name="ScoringButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+text = "SCORING"
+
+[node name="GameOverButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+text = "GAME_OVER"
+
+[node name="Spacer4" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="ValidationLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Test will show the state transitions in the console"
+horizontal_alignment = 1

@@ -10,7 +10,12 @@ This document tracks the progress of the Sichuan Mahjong implementation accordin
   - Implemented test validation script
   - Created placeholder icon
   - *Completed on: March 14, 2025*
-- [ ] Step 2: Create Core Game State Manager
+- [x] Step 2: Create Core Game State Manager
+  - Implemented game_state_manager.gd with state machine functionality
+  - Added game state transition methods and signals
+  - Added game data management (players, rounds, etc.)
+  - Created validation test scene to demonstrate state transitions
+  - *Completed on: March 14, 2025*
 - [ ] Step 3: Design Basic UI Framework
 
 ## Phase 2: Game Logic Implementation
