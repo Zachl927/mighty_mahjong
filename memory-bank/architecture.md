@@ -172,6 +172,82 @@ mighty_mahjong/
       - Dynamic changing of tile resolutions
     - **Implementation**: Provides comprehensive testing of all tile system components
 
+### Module: Player Hand Management
+
+The Player Hand Management system handles all aspects of a player's mahjong tiles, including organization, display, and interaction.
+
+#### Components:
+
+1. **PlayerHand (`scripts/core/player_hand.gd`)**:
+   - **Purpose**: Manages the logical representation of a player's hand.
+   - **Features**:
+     - Stores and manages tiles in the player's hand
+     - Provides methods for adding, removing, and sorting tiles
+     - Identifies and forms potential sets (Pongs, Kongs, Chows)
+     - Tracks exposed sets
+     - Checks for winning conditions
+     - Emits signals on hand state changes
+   - **Dependencies**: Tile, TileManager
+
+2. **PlayerHandDisplay (`scripts/ui/player_hand_display.gd`)**:
+   - **Purpose**: Handles the visual representation and user interaction with a player's hand.
+   - **Features**:
+     - Displays tiles in the player's hand
+     - Provides visual feedback for tile selection (single and multi-tile selection)
+     - Shows exposed sets
+     - Handles user interactions (clicking, dragging)
+     - Updates display based on hand changes
+     - Provides claim prompts for discarded tiles
+   - **Dependencies**: PlayerHand, Tile
+
+3. **Player Hand Scene (`scenes/player_hand.tscn`)**:
+   - **Purpose**: Provides the visual layout for the player hand display.
+   - **Features**:
+     - Contains containers for hand tiles and exposed sets
+     - Manages layout and styling of the hand display
+   - **Dependencies**: PlayerHandDisplay
+
+#### Test Framework:
+
+1. **Test Player Hand Scene (`scenes/test_player_hand.tscn`)**:
+   - **Purpose**: Tests all aspects of the player hand functionality.
+   - **Features**:
+     - Interface for adding random and specific tiles
+     - Testing tile removal (single and multi-tile)
+     - Testing set formation
+     - Displaying hand information
+     - Validating the player hand implementation
+   - **Dependencies**: PlayerHand, PlayerHandDisplay, TileManager
+
+2. **Test Player Hand Script (`tests/test_player_hand.gd`)**:
+   - **Purpose**: Implements test functionality for the player hand system.
+   - **Features**:
+     - Manages test actions (add/remove tiles, form sets)
+     - Tracks selected tiles (single and multiple)
+     - Displays test information and results
+     - Tests expected behavior of the player hand system
+   - **Dependencies**: PlayerHand, PlayerHandDisplay, TileManager
+
+#### Key Design Features:
+
+1. **Signal-Based Communication**:
+   - Components communicate through signals to maintain loose coupling
+   - Hand state changes emit signals that update the display
+
+2. **Clean Separation of Logic and Display**:
+   - Core logic is contained in PlayerHand while visual elements are in PlayerHandDisplay
+   - Clear API boundaries between components
+
+3. **Multi-Tile Selection System**:
+   - Tracks selections using array of indices
+   - Provides visual feedback for selected tiles
+   - Supports batch operations (e.g., removing multiple tiles at once)
+   - Signal notifications for selection changes
+
+4. **Test-Driven Development**:
+   - Comprehensive test scene to validate functionality
+   - Test utilities for various hand configurations
+
 ### Game State Manager Test
 - **Files**: 
   - `scenes/test_game_state_manager.tscn`
