@@ -7,6 +7,25 @@ This document outlines the architectural structure of the Mighty Mahjong game, d
 ```
 mighty_mahjong/
 ├── assets/               # Game assets (images, sounds, etc.)
+│   └── mahjong-tileset/  # Mahjong tile images in various sizes
+│       ├── 64/           # 64px tile images
+│       │   ├── fulltiles/ # Complete tile images with backgrounds
+│       │   ├── labels/    # Label-only versions of tiles
+│       │   └── tile.png   # Base tile template
+│       ├── 96/           # 96px tile images
+│       │   ├── fulltiles/ # Complete tile images with backgrounds
+│       │   ├── labels/    # Label-only versions of tiles
+│       │   └── tile.png   # Base tile template
+│       ├── 128/          # 128px tile images
+│       │   ├── fulltiles/ # Complete tile images with backgrounds
+│       │   ├── labels/    # Label-only versions of tiles
+│       │   └── tile.png   # Base tile template
+│       ├── 618/          # 618px tile images
+│       │   ├── fulltiles/ # Complete tile images with backgrounds
+│       │   ├── labels/    # Label-only versions of tiles
+│       │   └── tile.png   # Base tile template
+│       ├── license.txt    # CC BY 3.0 license information
+│       └── tiles.psd      # Source Photoshop file
 ├── scenes/               # Godot scenes
 │   ├── main.tscn         # Main entry scene
 │   ├── test_scene.tscn   # Project validation test scene
@@ -97,12 +116,43 @@ mighty_mahjong/
 - **Validation**: Checks directories, project configuration, window size
 - **Implementation**: Uses Godot's file system access to verify structure
 
+### Mahjong Tile Assets
+- **Directory**: `assets/mahjong-tileset/`
+- **Purpose**: Provides image assets for the tile system implementation
+- **Structure**:
+  - Multiple resolution options:
+    - `64/` - 64x64 pixel tiles (smaller size for mobile or compact UI)
+    - `96/` - 96x96 pixel tiles (medium size)
+    - `128/` - 128x128 pixel tiles (standard size for desktop)
+    - `618/` - 618x618 pixel tiles (high-resolution for detailed view or animations)
+  - Within each resolution directory:
+    - `fulltiles/` - Complete tile images with backgrounds and decorative elements
+    - `labels/` - Label-only versions of tiles (just the symbols without backgrounds)
+    - `tile.png` - Base tile template
+- **Tile Types**:
+  - **Suits**:
+    - Bamboo (bamboo1.png through bamboo9.png)
+    - Circles (circle1.png through circle9.png)
+    - Characters (pinyin1.png through pinyin15.png)
+  - **Bonus Tiles**:
+    - Seasons (spring.png, summer.png, fall.png, winter.png)
+    - Flowers (chrysanthemum.png, lotus.png, orchid.png, peony.png)
+- **Asset Format**: PNG files with transparency
+- **Total Images**: 41 unique tile designs × 4 resolutions × 2 styles (full/label) = 328 image files
+- **License**: Creative Commons Attribution 3.0 (CC BY 3.0) by Code Inferno
+- **Usage**: 
+  - Will be used by the Tile System for visual representation of Sichuan Mahjong tiles
+  - Multiple resolutions allow for responsive design across different screen sizes
+  - Label-only versions provide options for custom styling or performance optimization
+  - High-resolution (618px) tiles can be used for close-up views or animations
+
 ## Pending Components
 
 ### Tile System
 - **File**: `scripts/core/tile.gd`
 - **Purpose**: Defines tile properties and behavior
 - **Related Files**: `scripts/core/tile_manager.gd` (handles tile generation and distribution)
+- **Assets**: Will use the mahjong-tileset assets in assets directory
 
 ### Player Management
 - **File**: `scripts/core/player_hand.gd`

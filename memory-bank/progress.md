@@ -25,6 +25,11 @@ This document tracks the progress of the Sichuan Mahjong implementation accordin
 
 ## Phase 2: Game Logic Implementation
 - [ ] Step 4: Create Tile System
+  - **Preparation**: Added mahjong-tileset assets folder with tile images in multiple resolutions (64px, 96px, 128px, 618px)
+  - Tileset includes complete set of Mahjong tiles (bamboo, circle, character, seasons, flowers)
+  - Assets licensed under CC BY 3.0 by Code Inferno
+  - *Preparation completed on: March 14, 2025*
+
 - [ ] Step 5: Implement Player Hand Management
 - [ ] Step 6: Implement Game Rules
 
