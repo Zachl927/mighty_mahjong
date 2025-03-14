@@ -49,14 +49,17 @@ This document tracks the progress of the Sichuan Mahjong implementation accordin
 
 - [x] Step 6: Implement Game Rules
   - Created `game_rules.gd` script to implement Sichuan Mahjong rules, including:
-    - Action validation (draw, discard, claim, win)
+    - Action validation (draw, discard, peng, gang, win)
     - Suit restriction validation (max 2 suits per hand)
-    - Winning pattern validation
-  - Implemented test files for game rules validation
-  - Fixed suit restriction validation logic to correctly check suit_type instead of tile type
-  - Fixed action validation method signatures to ensure consistent parameter naming
-  - Created comprehensive test cases to verify rule implementation
-  - *Partially completed on: March 14, 2025*
+    - Winning pattern validation (standard pattern and seven pairs)
+    - Turn management with proper state transitions (waiting, draw, discard, claim, game over)
+    - Comprehensive scoring system with bonuses for special hands
+  - Implemented recursive algorithm for checking standard winning patterns (4 sets and 1 pair)
+  - Added validation for seven pairs winning condition
+  - Implemented turn-based action validation to ensure players can only perform legal actions
+  - Created game flow control with proper handling of turn transitions
+  - Added signals for game events and turn changes
+  - *Completed on: March 14, 2025*
 
 ## Phase 3: Networking Implementation
 - [ ] Step 7: Set Up Basic Networking

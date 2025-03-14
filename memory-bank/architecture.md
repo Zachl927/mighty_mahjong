@@ -257,14 +257,19 @@ The Game Rules module implements the specific rules of Sichuan Mahjong, ensuring
 1. **GameRules (`scripts/core/game_rules.gd`)**:
    - **Purpose**: Defines and enforces the rules specific to Sichuan Mahjong.
    - **Features**:
-     - Action validation for all game moves (draw, discard, claim, win)
+     - Action validation for all game moves (draw, discard, peng, gang, win)
+     - Turn-based action validation with state tracking (draw phase, discard phase, claim phase)
      - Suit restriction validation (max 2 suits per hand)
-     - Winning pattern validation
-     - Constants for game-specific rules (e.g., MAX_SUITS_PER_HAND = 2)
+     - Winning pattern validation using recursive pattern checking algorithm
+     - Seven pairs win condition validation
+     - Scoring system with bonuses for special hands
+     - Game flow management with proper turn transitions
    - **Implementation Details**:
      - Uses modular validation methods for each action type
      - Implements unified `validate_action` method as public API
      - Ensures proper validation of 2-suit restriction by checking tile.suit_type
+     - Maintains game state with player turn tracking and action history
+     - Emits signals for game events, turn changes, and game over conditions
    - **Dependencies**: Tile, PlayerHand
 
 2. **Game Rules Tests (`tests/test_game_rules.gd`)**:
