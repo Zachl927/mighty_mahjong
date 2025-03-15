@@ -23,26 +23,14 @@ func _init(size: int = 128):
 func create_complete_set() -> Array[Tile]:
     all_tiles.clear()
     
-    # Create 4 copies of each suit tile (Bamboo, Circle, Character)
-    for suit in range(3):  # 0=Bamboo, 1=Circle, 2=Character
+    # Create 4 copies of each suit tile (Bamboo, Circle, Pinyin)
+    # In Sichuan mahjong, only these three suits are used
+    for suit in range(3):  # 0=Bamboo, 1=Circle, 2=Pinyin
         for value in range(1, 10):  # 1-9
             for _copy in range(4):
                 var tile = Tile.new(Tile.TileType.SUIT, value, suit)
                 asset_manager.set_tile_texture(tile)
                 all_tiles.append(tile)
-    
-    # Create 4 copies of each honor tile (winds and dragons)
-    for honor in range(7):  # 0-3=Winds, 4-6=Dragons
-        for _copy in range(4):
-            var tile = Tile.new(Tile.TileType.HONOR, -1, honor)
-            asset_manager.set_tile_texture(tile)
-            all_tiles.append(tile)
-    
-    # Create 1 copy of each bonus tile (seasons and flowers)
-    for bonus in range(8):  # 0-3=Seasons, 4-7=Flowers
-        var tile = Tile.new(Tile.TileType.BONUS, -1, bonus)
-        asset_manager.set_tile_texture(tile)
-        all_tiles.append(tile)
     
     return all_tiles
 
@@ -80,6 +68,18 @@ func draw_tile() -> Tile:
         return null
     
     return wall.pop_back()
+
+# Draw a tile from the back of the wall (for Gang)
+func draw_tile_from_back() -> Tile:
+    if wall.is_empty():
+        wall_empty.emit()
+        return null
+    
+    var tile = wall.pop_front()
+    # Mark this tile as drawn from the back end (used for scoring)
+    if tile:
+        tile.from_back_end = true
+    return tile
 
 # Draw multiple tiles from the wall
 func draw_tiles(count: int) -> Array[Tile]:
@@ -143,11 +143,3 @@ func get_tiles_by_type(type: int) -> Array[Tile]:
 # Get all suit tiles
 func get_suit_tiles() -> Array[Tile]:
     return get_tiles_by_type(Tile.TileType.SUIT)
-
-# Get all honor tiles
-func get_honor_tiles() -> Array[Tile]:
-    return get_tiles_by_type(Tile.TileType.HONOR)
-
-# Get all bonus tiles
-func get_bonus_tiles() -> Array[Tile]:
-    return get_tiles_by_type(Tile.TileType.BONUS)
