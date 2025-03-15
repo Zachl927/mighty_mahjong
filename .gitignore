@@ -14,3 +14,11 @@ mono_crash.*.json
 
 # System-specific
 .DS_Store
+
+# IDE-specific
+.cursor/
+.cursorrules
+*.uid
+
+# Godot imported files
+*.import
