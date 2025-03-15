@@ -49,11 +49,11 @@ This document tracks the progress of the Sichuan Mahjong implementation accordin
 
 - [x] Step 6: Implement Game Rules
   - Created `game_rules.gd` script to implement Sichuan Mahjong rules, including:
-    - Action validation (draw, discard, peng, gang, win)
-    - Suit restriction validation (max 2 suits per hand)
-    - Winning pattern validation (standard pattern and seven pairs)
-    - Turn management with proper state transitions (waiting, draw, discard, claim, game over)
-    - Comprehensive scoring system with bonuses for special hands
+	- Action validation (draw, discard, peng, gang, win)
+	- Suit restriction validation (max 2 suits per hand)
+	- Winning pattern validation (standard pattern and seven pairs)
+	- Turn management with proper state transitions (waiting, draw, discard, claim, game over)
+	- Comprehensive scoring system with bonuses for special hands
   - Implemented recursive algorithm for checking standard winning patterns (4 sets and 1 pair)
   - Added validation for seven pairs winning condition
   - Implemented turn-based action validation to ensure players can only perform legal actions
@@ -62,7 +62,29 @@ This document tracks the progress of the Sichuan Mahjong implementation accordin
   - *Completed on: March 14, 2025*
 
 ## Phase 3: Networking Implementation
-- [ ] Step 7: Set Up Basic Networking
+- [x] Step 7: Set Up Basic Networking
+  - Created `network_manager.gd` script that:
+	- Sets up ENet peer-to-peer connections
+	- Implements host and client functionality
+	- Handles connection/disconnection events
+	- Provides reliable and unreliable transmission channels
+	- Implements robust error handling and reconnection
+	- Manages player information synchronization across network
+	- Uses proper RPC annotations for network communications
+  - Created `network_manager.tscn` scene with network node
+  - Developed `test_network_manager.tscn` validation scene to:
+	- Test hosting a game
+	- Test joining a host
+	- Display connected players
+	- Allow player name changes with real-time updates
+	- Allow disconnection
+	- Monitor and log networking events
+  - Used Godot's built-in multiplayer API with ENet
+  - Implemented player tracking and synchronization
+  - Added network event signaling for client/host communication
+  - Fixed issues with RPC permission annotations for Godot 4 compatibility
+  - Enhanced player name updating and synchronization between clients
+  - *Completed on: March 15, 2025*
 - [ ] Step 8: Implement Game State Synchronization
 - [ ] Step 9: Implement Player Turns and Actions
 

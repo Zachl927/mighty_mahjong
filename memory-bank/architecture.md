@@ -248,6 +248,84 @@ The Player Hand Management system handles all aspects of a player's mahjong tile
    - Comprehensive test scene to validate functionality
    - Test utilities for various hand configurations
 
+### Module: Network Management
+
+The Network Management system handles multiplayer connectivity, player synchronization, and game state sharing across the network.
+
+#### Components:
+
+1. **NetworkManager (`scripts/networking/network_manager.gd`)**:
+   - **Purpose**: Core networking component that manages all multiplayer functionality.
+   - **Features**:
+     - Establishes and maintains ENet peer-to-peer connections
+     - Implements both host and client functionality
+     - Manages player connection/disconnection events
+     - Synchronizes player information across the network
+     - Provides reliable and unreliable transmission channels
+     - Implements error handling and reconnection logic
+     - Processes remote procedure calls (RPCs) for network communication
+     - Emits signals for various network events
+   - **Dependencies**: Godot's MultiplayerAPI, ENetMultiplayerPeer
+
+2. **Network Manager Scene (`scripts/networking/network_manager.tscn`)**:
+   - **Purpose**: Provides a reusable scene for adding networking to any game component.
+   - **Features**:
+     - Encapsulated networking node ready for instancing
+     - Self-contained functionality that can be attached to game scenes
+   - **Dependencies**: NetworkManager script
+
+3. **Test Network Manager Scene (`scenes/test_network_manager.tscn`)**:
+   - **Purpose**: Tests and validates the networking functionality.
+   - **Features**:
+     - UI for hosting and joining games
+     - Player name customization
+     - Connected player list display
+     - Network event logging
+     - Connection status monitoring
+   - **Dependencies**: NetworkManager, Test Network Manager script
+
+4. **Test Network Manager Script (`tests/test_network_manager.gd`)**:
+   - **Purpose**: Implements test functionality for networking system.
+   - **Features**:
+     - Connects UI elements to network manager functions
+     - Processes user interactions (host/join/disconnect)
+     - Updates UI based on network events
+     - Logs and displays network activities
+   - **Dependencies**: NetworkManager
+
+#### Key Design Features:
+
+1. **Client-Server Architecture**:
+   - Uses a client-server model with one player acting as host (server)
+   - All game actions pass through the host for validation
+   - Host manages authoritative game state
+
+2. **Signal-Based Event System**:
+   - Network events emit signals that UI and game components can connect to
+   - Clear separation between network logic and game components
+
+3. **RPC Communication Patterns**:
+   - Uses Godot's built-in RPC system with proper permission annotations
+   - Implements both reliable (guaranteed delivery) and unreliable (low latency) channels
+   - Optimized data transmission with targeted RPCs (send only to relevant peers)
+
+4. **Player Synchronization**:
+   - Tracks all connected players with unique IDs
+   - Shares player information (name, status, etc.) across all peers
+   - Provides real-time updates when player information changes
+
+5. **Error Handling and Recovery**:
+   - Detects disconnections with automatic reconnection attempts
+   - Provides clear error messages for connection issues
+   - Handles graceful disconnection and cleanup
+
+6. **Network Security Considerations**:
+   - Uses proper authority validation for critical game actions
+   - Validates game state changes on the host
+   - Implements RPC permissions to prevent unauthorized calls
+
+This network architecture supports the multiplayer requirements for Mighty Mahjong while following best practices for Godot 4's networking API and adhering to the project's modularity principles (Windsurf Rule #2).
+
 ### Module: Game Rules
 
 The Game Rules module implements the specific rules of Sichuan Mahjong, ensuring proper gameplay mechanics and validation.
@@ -315,11 +393,6 @@ The Game Rules module implements the specific rules of Sichuan Mahjong, ensuring
 - **Scene**: `scenes/player_hand.tscn`
 
 ### Networking Components
-
-#### Network Manager
-- **File**: `scripts/networking/network_manager.gd`
-- **Purpose**: Handles network connections using ENet
-- **Scene**: `scenes/network_manager.tscn`
 
 #### State Synchronization
 - **File**: `scripts/networking/state_sync.gd`

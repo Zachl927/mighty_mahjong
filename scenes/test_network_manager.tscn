@@ -1,0 +1,197 @@
+[gd_scene load_steps=3 format=3 uid="uid://dl4uwx63u24p3"]
+
+[ext_resource type="Script" uid="uid://c0pc28xlxby61" path="res://tests/test_network_manager.gd" id="1_4ihbn"]
+[ext_resource type="PackedScene" uid="uid://bi0uhk8drlge3" path="res://scenes/network_manager.tscn" id="2_kkivj"]
+
+[node name="TestNetworkManager" type="Node"]
+script = ExtResource("1_4ihbn")
+
+[node name="NetworkManager" parent="." instance=ExtResource("2_kkivj")]
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderSection" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Title" type="Label" parent="UI/MarginContainer/VBoxContainer/HeaderSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Network Manager Test"
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="UI/MarginContainer/VBoxContainer/HeaderSection"]
+layout_mode = 2
+text = "Mode: None, Players: 0"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="NameSection" type="HBoxContainer" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PlayerNameLabel" type="Label" parent="UI/MarginContainer/VBoxContainer/NameSection"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+text = "Player Name:"
+
+[node name="PlayerNameInput" type="LineEdit" parent="UI/MarginContainer/VBoxContainer/NameSection"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Player"
+placeholder_text = "Enter your name"
+
+[node name="HSeparator2" type="HSeparator" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MainContent" type="HBoxContainer" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="LeftSection" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="HostControls" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="IPLabel" type="Label" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls"]
+layout_mode = 2
+text = "IP Address:"
+
+[node name="IPInput" type="LineEdit" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls"]
+layout_mode = 2
+text = "127.0.0.1"
+placeholder_text = "Enter IP address"
+
+[node name="PortLabel" type="Label" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls"]
+layout_mode = 2
+text = "Port:"
+
+[node name="PortInput" type="LineEdit" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls"]
+layout_mode = 2
+text = "28960"
+placeholder_text = "Enter port number"
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HostButton" type="Button" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Host Game"
+
+[node name="JoinButton" type="Button" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Join Game"
+
+[node name="DisconnectButton" type="Button" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls"]
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Disconnect"
+
+[node name="HSeparator" type="HSeparator" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection"]
+layout_mode = 2
+
+[node name="Players" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/Players"]
+layout_mode = 2
+text = "Players"
+horizontal_alignment = 1
+
+[node name="PlayerList" type="ItemList" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/Players"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RightSection" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+theme_override_constants/separation = 10
+
+[node name="InstructionsPanel" type="PanelContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection/InstructionsPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection/InstructionsPanel/VBoxContainer"]
+layout_mode = 2
+text = "Testing Instructions"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection/InstructionsPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Instructions" type="RichTextLabel" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection/InstructionsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "To test the network functionality:
+
+1. Launch two instances of the game
+2. In the first instance, click \"Host Game\"
+3. In the second instance, ensure the IP address is correct (127.0.0.1 for same machine), then click \"Join Game\"
+4. Observe the player list updating in both instances
+5. Change your player name to see it update across instances
+6. Test disconnecting from either instance
+
+The log panel shows networking events as they occur.
+
+This test verifies the basic ENet peer-to-peer connection functionality."
+
+[node name="LogPanel" type="PanelContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection/LogPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection/LogPanel/VBoxContainer"]
+layout_mode = 2
+text = "Log"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection/LogPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="LogText" type="TextEdit" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection/LogPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+editable = false
+context_menu_enabled = false
+shortcut_keys_enabled = false
