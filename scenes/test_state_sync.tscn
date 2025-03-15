@@ -1,0 +1,243 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://tests/test_state_sync.gd" id="1_qb3eq"]
+[ext_resource type="PackedScene" path="res://scenes/network_manager.tscn" id="2_f1jn0"]
+[ext_resource type="PackedScene" path="res://scenes/state_sync.tscn" id="3_n24ey"]
+[ext_resource type="Script" path="res://scripts/core/game_state_manager.gd" id="4_vul7a"]
+
+[node name="TestStateSync" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qb3eq")
+
+[node name="NetworkManager" parent="." instance=ExtResource("2_f1jn0")]
+
+[node name="StateSync" parent="." instance=ExtResource("3_n24ey")]
+
+[node name="GameStateManager" type="Node" parent="."]
+script = ExtResource("4_vul7a")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderSection" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/MarginContainer/VBoxContainer/HeaderSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "State Synchronization Test"
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="UI/MarginContainer/VBoxContainer/HeaderSection"]
+layout_mode = 2
+text = "Status: Disconnected"
+horizontal_alignment = 1
+
+[node name="NameSection" type="HBoxContainer" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="UI/MarginContainer/VBoxContainer/NameSection"]
+layout_mode = 2
+text = "Player Name:"
+
+[node name="PlayerNameInput" type="LineEdit" parent="UI/MarginContainer/VBoxContainer/NameSection"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Player"
+placeholder_text = "Enter your name"
+
+[node name="UpdateNameButton" type="Button" parent="UI/MarginContainer/VBoxContainer/NameSection"]
+layout_mode = 2
+text = "Update Name"
+
+[node name="HSeparator" type="HSeparator" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MainContent" type="HBoxContainer" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="LeftSection" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="HostControls" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="SectionLabel" type="Label" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Network Controls"
+
+[node name="IPInputContainer" type="HBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls"]
+layout_mode = 2
+
+[node name="IPLabel" type="Label" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls/IPInputContainer"]
+layout_mode = 2
+text = "IP Address:"
+
+[node name="IPInput" type="LineEdit" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls/IPInputContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "127.0.0.1"
+placeholder_text = "Enter host IP"
+
+[node name="PortInputContainer" type="HBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls"]
+layout_mode = 2
+
+[node name="PortLabel" type="Label" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls/PortInputContainer"]
+layout_mode = 2
+text = "Port:"
+
+[node name="PortInput" type="LineEdit" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls/PortInputContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "28960"
+placeholder_text = "Enter port"
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HostButton" type="Button" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Host Game"
+
+[node name="JoinButton" type="Button" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Join Game"
+
+[node name="DisconnectButton" type="Button" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/HostControls/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Disconnect"
+
+[node name="HSeparator" type="HSeparator" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection"]
+layout_mode = 2
+
+[node name="Players" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection"]
+layout_mode = 2
+
+[node name="PlayersLabel" type="Label" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/Players"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Connected Players"
+
+[node name="PlayerList" type="ItemList" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/Players"]
+layout_mode = 2
+size_flags_vertical = 3
+auto_height = true
+item_count = 1
+item_0/text = "No players connected"
+
+[node name="HSeparator2" type="HSeparator" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection"]
+layout_mode = 2
+
+[node name="GameControls" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection"]
+layout_mode = 2
+
+[node name="GameControlsLabel" type="Label" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/GameControls"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Game Controls"
+
+[node name="StartGameButton" type="Button" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/GameControls"]
+layout_mode = 2
+text = "Start Game"
+
+[node name="GameActionButtonsContainer" type="GridContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/GameControls"]
+layout_mode = 2
+columns = 2
+
+[node name="DrawTileButton" type="Button" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/GameControls/GameActionButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Draw Tile"
+
+[node name="DiscardTileButton" type="Button" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/GameControls/GameActionButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Discard Tile"
+
+[node name="ClaimTileButton" type="Button" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/GameControls/GameActionButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Claim Tile"
+
+[node name="WinHandButton" type="Button" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/GameControls/GameActionButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Win Hand"
+
+[node name="ForceSyncButton" type="Button" parent="UI/MarginContainer/VBoxContainer/MainContent/LeftSection/GameControls"]
+layout_mode = 2
+text = "Force Sync Game State"
+
+[node name="RightSection" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+theme_override_constants/separation = 10
+
+[node name="GameStateDisplay" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection"]
+layout_mode = 2
+
+[node name="GameStateLabel" type="Label" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection/GameStateDisplay"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Game State"
+
+[node name="StateInfoDisplay" type="TextEdit" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection/GameStateDisplay"]
+layout_mode = 2
+size_flags_vertical = 3
+placeholder_text = "Game state information will appear here"
+editable = false
+wrap_mode = 1
+
+[node name="LogPanel" type="VBoxContainer" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.5
+
+[node name="LogLabel" type="Label" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection/LogPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Event Log"
+
+[node name="LogText" type="TextEdit" parent="UI/MarginContainer/VBoxContainer/MainContent/RightSection/LogPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+placeholder_text = "Network events and logs will appear here"
+editable = false
+wrap_mode = 1 

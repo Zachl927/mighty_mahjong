@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/networking/state_sync.gd" id="1_fmvx8"]
+
+[node name="StateSync" type="Node"]
+script = ExtResource("1_fmvx8") 
