@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3 uid="uid://dimwkd4phlmnn"]
+
+[ext_resource type="Script" uid="uid://cxr7u6s4fl1pq" path="res://scripts/ui/player_hand_display.gd" id="1_uqdh0"]
+
+[node name="PlayerHand" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_uqdh0")
+
+[node name="MainHandContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 90.0
+grow_horizontal = 2
+theme_override_constants/separation = -20
+alignment = 1
+
+[node name="ExposedSetsContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -110.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 5
+
+[node name="Label" type="Label" parent="ExposedSetsContainer"]
+layout_mode = 2
+text = "Exposed Sets:"
+
+[node name="SetsGrid" type="HBoxContainer" parent="ExposedSetsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10

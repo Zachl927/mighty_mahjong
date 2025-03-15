@@ -1,0 +1,125 @@
+[gd_scene load_steps=2 format=3 uid="uid://cdairyjcay5va"]
+
+[ext_resource type="Script" uid="uid://b2sfmskqboyyq" path="res://tests/test_player_hand.gd" id="1_wnwfp"]
+
+[node name="TestPlayerHand" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_wnwfp")
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderLabel" type="Label" parent="MainContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Player Hand Management Test"
+horizontal_alignment = 1
+
+[node name="DescriptionLabel" type="Label" parent="MainContainer"]
+layout_mode = 2
+text = "This test validates the PlayerHand implementation, including adding, removing, sorting tiles and identifying sets."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="PlayerHandContainer" type="Control" parent="MainContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="ActionPanel" type="Panel" parent="MainContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/ActionPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="ActionLabel" type="Label" parent="MainContainer/ActionPanel/VBoxContainer"]
+layout_mode = 2
+text = "Actions:"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/ActionPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="AddRandomTileButton" type="Button" parent="MainContainer/ActionPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Add Random Tile"
+
+[node name="RemoveSelectedTileButton" type="Button" parent="MainContainer/ActionPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Remove Selected Tile"
+
+[node name="SortTilesButton" type="Button" parent="MainContainer/ActionPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Sort Tiles"
+
+[node name="ShowInfoButton" type="Button" parent="MainContainer/ActionPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Show Hand Info"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MainContainer/ActionPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="AddSpecificSetsButton" type="Button" parent="MainContainer/ActionPanel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Add Specific Sets"
+
+[node name="FormSetButton" type="Button" parent="MainContainer/ActionPanel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Form Set (if possible)"
+
+[node name="ClearHandButton" type="Button" parent="MainContainer/ActionPanel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Clear Hand"
+
+[node name="InfoPanel" type="Panel" parent="MainContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/InfoPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="InfoLabel" type="Label" parent="MainContainer/InfoPanel/VBoxContainer"]
+layout_mode = 2
+text = "Information:"
+
+[node name="InfoTextEdit" type="TextEdit" parent="MainContainer/InfoPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+editable = false
+wrap_mode = 1
+
+[connection signal="pressed" from="MainContainer/ActionPanel/VBoxContainer/HBoxContainer/AddRandomTileButton" to="." method="_on_add_random_tile_button_pressed"]
+[connection signal="pressed" from="MainContainer/ActionPanel/VBoxContainer/HBoxContainer/RemoveSelectedTileButton" to="." method="_on_remove_selected_tile_button_pressed"]
+[connection signal="pressed" from="MainContainer/ActionPanel/VBoxContainer/HBoxContainer/SortTilesButton" to="." method="_on_sort_tiles_button_pressed"]
+[connection signal="pressed" from="MainContainer/ActionPanel/VBoxContainer/HBoxContainer/ShowInfoButton" to="." method="_on_show_info_button_pressed"]
+[connection signal="pressed" from="MainContainer/ActionPanel/VBoxContainer/HBoxContainer2/AddSpecificSetsButton" to="." method="_on_add_specific_sets_button_pressed"]
+[connection signal="pressed" from="MainContainer/ActionPanel/VBoxContainer/HBoxContainer2/FormSetButton" to="." method="_on_form_set_button_pressed"]
+[connection signal="pressed" from="MainContainer/ActionPanel/VBoxContainer/HBoxContainer2/ClearHandButton" to="." method="_on_clear_hand_button_pressed"]

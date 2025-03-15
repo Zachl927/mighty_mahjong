@@ -1,0 +1,87 @@
+[gd_scene load_steps=4 format=3 uid="uid://c2tggof63ko6x"]
+
+[ext_resource type="Script" uid="uid://hh12pclrv0kt" path="res://tests/test_game_rules.gd" id="1_tqpfu"]
+[ext_resource type="Script" uid="uid://bo4jq36j2hafr" path="res://scripts/core/game_rules.gd" id="2_wqxxs"]
+[ext_resource type="Script" uid="uid://cy1tvacw2q01s" path="res://scripts/core/tile_manager.gd" id="3_uj3m1"]
+
+[node name="TestGameRules" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_tqpfu")
+
+[node name="GameRules" type="Node" parent="."]
+script = ExtResource("2_wqxxs")
+
+[node name="TileManager" type="Node" parent="."]
+script = ExtResource("3_uj3m1")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -250.0
+offset_right = 300.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Game Rules Test"
+horizontal_alignment = 1
+
+[node name="Spacer1" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Ready to run tests"
+horizontal_alignment = 1
+
+[node name="Spacer2" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="TestOutput" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "Test results will appear here"
+fit_content = true
+scroll_following = true
+
+[node name="Spacer3" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="RunTestsButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+text = "Run All Tests"
+
+[node name="Spacer4" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="InfoLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Tests validate game rules including valid actions, winning conditions, and scoring"
+horizontal_alignment = 1
+autowrap_mode = 3
