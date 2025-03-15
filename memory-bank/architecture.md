@@ -326,6 +326,86 @@ The Network Management system handles multiplayer connectivity, player synchroni
 
 This network architecture supports the multiplayer requirements for Mighty Mahjong while following best practices for Godot 4's networking API and adhering to the project's modularity principles (Windsurf Rule #2).
 
+### Module: Game State Synchronization
+
+The Game State Synchronization system ensures consistent game state across all connected clients in a multiplayer game.
+
+#### Components:
+
+1. **StateSync (`scripts/networking/state_sync.gd`)**:
+   - **Purpose**: Manages synchronization of game state data between host and clients.
+   - **Features**:
+     - Defines game action types with an enum (GAME_START, DRAW_TILE, DISCARD_TILE, etc.)
+     - Implements serialization/deserialization of game objects for network transmission
+     - Provides methods for sending game actions across the network
+     - Processes incoming game actions and updates local state
+     - Supports full game state synchronization from host to clients
+     - Maintains consistent game state between all players
+     - Handles conflict resolution with host authority
+     - Emits signals for sync events (sync completed, action received, errors)
+   - **Implementation Details**:
+     - Uses reliable transmission for critical game state updates (following Rule #1)
+     - Implements modular action handler methods (_handle_game_start, _handle_draw_tile, etc.)
+     - Maintains a game_state_data dictionary for complete state tracking
+     - Integrates with NetworkManager for transmission and GameStateManager for state updates
+   - **Dependencies**: NetworkManager, GameStateManager, GameRules, TileManager
+
+2. **State Sync Scene (`scenes/state_sync.tscn`)**:
+   - **Purpose**: Provides a reusable scene for adding state synchronization to any game component.
+   - **Features**:
+     - Self-contained functionality that can be attached to game scenes
+     - Properly configured to work with NetworkManager
+   - **Dependencies**: StateSync script
+
+3. **Test State Sync Scene (`scenes/test_state_sync.tscn`)**:
+   - **Purpose**: Tests and validates the state synchronization functionality.
+   - **Features**:
+     - UI for hosting and joining games
+     - Game control panels for testing actions (draw, discard, claim, win)
+     - Game state display showing current synchronized state
+     - Action log to track synchronization events
+     - Force sync button to test full state synchronization
+   - **Dependencies**: StateSync, NetworkManager, GameStateManager
+
+4. **Test State Sync Script (`tests/test_state_sync.gd`)**:
+   - **Purpose**: Implements test functionality for the state synchronization system.
+   - **Features**:
+     - Connects UI elements to state sync functions
+     - Provides mock gameplay components for testing (TileManager, GameRules)
+     - Updates UI based on game state changes
+     - Logs and displays synchronization events
+   - **Dependencies**: StateSync, NetworkManager, GameStateManager
+
+#### Key Design Features:
+
+1. **Action-Based Synchronization**:
+   - Uses a set of defined game actions for most synchronization
+   - Each action has specific data requirements and handling logic
+   - Actions are transmitted reliably across the network
+
+2. **Full State Synchronization**:
+   - Provides a mechanism for complete state synchronization
+   - Host can force a full sync to ensure all clients are consistent
+   - Useful for handling reconnections or resolving conflicts
+
+3. **Host Authority Model**:
+   - Host maintains authoritative game state
+   - Clients send actions to host for validation
+   - Host broadcasts validated actions to all clients
+   - Prevents cheating and ensures consistent gameplay
+
+4. **Modular Integration**:
+   - Clean integration with other game components
+   - Follows the modular architecture of the project (Rule #2)
+   - Uses signals to notify about synchronization events (Rule #9)
+
+5. **Error Handling**:
+   - Detects and reports synchronization errors
+   - Provides recovery mechanisms for state inconsistencies
+   - Implements robust error handling for network operations (Rule #4)
+
+This state synchronization architecture provides a reliable foundation for multiplayer gameplay in Mighty Mahjong, ensuring that all players see a consistent game state while following best practices for Godot networking.
+
 ### Module: Game Rules
 
 The Game Rules module implements the specific rules of Sichuan Mahjong, ensuring proper gameplay mechanics and validation.
@@ -391,12 +471,6 @@ The Game Rules module implements the specific rules of Sichuan Mahjong, ensuring
 - **File**: `scripts/core/player_hand.gd`
 - **Purpose**: Manages player's tiles and legal actions
 - **Scene**: `scenes/player_hand.tscn`
-
-### Networking Components
-
-#### State Synchronization
-- **File**: `scripts/networking/state_sync.gd`
-- **Purpose**: Ensures game state consistency across clients
 
 ## Data Persistence
 
