@@ -505,9 +505,9 @@ The architecture is designed to support Sichuan Mahjong rules specifically, whic
 
 ## Networking Approach
 
-In line with Windsurf Rule #1, the planned networking implementation will:
+In line with Cursor Rule #1, the planned networking implementation will:
 - Use ENet's reliable transmission for critical game state updates
 - Use unreliable transmission for non-critical data
-- Implement robust error handling as per Windsurf Rule #4
+- Implement robust error handling as per Cursor Rule #4
 
-This architecture follows the Windsurf Rules, particularly emphasizing modularity to avoid a monolithic codebase and leveraging Godot's scene system for organization.
+This architecture follows the Cursor Rules, particularly emphasizing modularity to avoid a monolithic codebase and leveraging Godot's scene system for organization.

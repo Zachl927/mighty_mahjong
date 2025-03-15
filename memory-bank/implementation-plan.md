@@ -45,17 +45,30 @@ This document provides a step-by-step implementation plan for developing the bas
 
 ## Phase 2: Game Logic Implementation
 
-### Step 4: Create Tile System
+### Step 4: Create Tile System with Asset Integration
 1. Create a `scripts/tile.gd` script defining the Tile class with properties:
    - `type` (suit, honor, bonus)
    - `value` (1-9 for suits, specific values for honors/bonus)
    - `image_path` (reference to the corresponding tile image)
-2. Create a `scripts/tile_manager.gd` script to:
+   - `texture` (loaded Godot Texture2D resource)
+2. Create a `scripts/tile_asset_manager.gd` script to:
+   - Map tile types and values to the specific asset files in your downloaded folder
+   - Create a dictionary of preloaded tile textures for efficient access
+   - Handle any special cases in your asset set (e.g., different visual styles)
+3. Create a `scripts/tile_manager.gd` script to:
    - Generate a complete set of 144 Mahjong tiles
+   - Associate each tile with the correct texture using the asset manager
    - Shuffle tiles
    - Distribute tiles to players
+4. Create a `scenes/tile.tscn` scene that:
+   - Displays the tile texture
+   - Handles tile selection/interaction
+   - Includes necessary animations (highlight, selection, etc.)
 
-**Validation Test**: Write a test that creates a full set of Mahjong tiles, verifies that all 144 tiles are present, and checks that the distribution gives each player the correct number of tiles.
+**Validation Test**:
+1. Create a test scene that displays all 144 tiles with their proper textures
+2. Verify that all tiles are correctly mapped to their respective images
+3. Test the distribution function to ensure each player receives the correct number of tiles with appropriate textures
 
 ### Step 5: Implement Player Hand Management
 1. Create a `scripts/player_hand.gd` script that:
