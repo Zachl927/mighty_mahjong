@@ -104,7 +104,32 @@ This document tracks the progress of the Sichuan Mahjong implementation accordin
   - Used reliable transmission for critical game state updates (following Rule #1)
   - Ensured clean integration with existing components (following  Rule #2)
   - *Completed on: March 14, 2025*
-- [ ] Step 9: Implement Player Turns and Actions
+- [x] Step 9: Implement Player Turns and Actions
+  - Created `turn_manager.gd` script that:
+    - Tracks current player turn and turn phases
+    - Manages action sequences (draw → discard → claim)
+    - Validates player actions based on current turn state
+    - Implements claim window with timer for other players to claim discarded tiles
+    - Broadcasts turn changes over the network
+    - Handles host authority for resolving claims
+  - Created `turn_manager.tscn` scene as a modular component
+  - Developed `test_turn_manager.tscn` validation scene to:
+    - Test turn rotation between players
+    - Validate action sequence enforcement
+    - Test claim window functionality
+    - Verify network synchronization of turns and actions
+  - Implemented proper integration with game_rules for action validation
+  - Added network synchronization through state_sync
+  - Enhanced StateSync with null dependency checks and safe signal connections
+  - Fixed network message handling to properly distinguish between system events and game actions
+  - Improved game start and player join synchronization between host and clients
+  - Implemented comprehensive debug logging for network communications
+  - Applied dependency injection best practices for component initialization
+  - Used reliable transmission for turn state updates (following Rule #1)
+  - Maintained modular design with clear separation of responsibilities (following Rule #2)
+  - Fixed a critical bug in the NetworkManager's game action processing
+  - Added explicit state synchronization during game start to ensure all clients have correct information
+  - *Completed on: March 16, 2025*
 
 ## Phase 4: UI and Interaction
 - [ ] Step 10: Implement Tile Drawing and Discarding

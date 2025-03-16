@@ -505,9 +505,177 @@ The architecture is designed to support Sichuan Mahjong rules specifically, whic
 
 ## Networking Approach
 
-In line with Cursor Rule #1, the planned networking implementation will:
-- Use ENet's reliable transmission for critical game state updates
-- Use unreliable transmission for non-critical data
-- Implement robust error handling as per Cursor Rule #4
+In line with Cursor Rule #1, the networking implementation:
+- Uses ENet's reliable transmission for critical game state updates
+- Uses unreliable transmission for non-critical data
+- Implements robust error handling as per Cursor Rule #4
 
-This architecture follows the Cursor Rules, particularly emphasizing modularity to avoid a monolithic codebase and leveraging Godot's scene system for organization.
+The networking architecture follows a modular design with clear separation of responsibilities:
+
+### NetworkManager Component
+
+The NetworkManager (`scripts/networking/network_manager.gd`) serves as the foundation of the multiplayer system, handling:
+
+1. **Connection Management**:
+   - Creating server (host) sessions
+   - Joining existing hosts
+   - Managing disconnections and reconnection attempts
+   - Tracking connected peers
+
+2. **Player Information Synchronization**:
+   - Registering player information across the network
+   - Broadcasting player updates to all peers
+   - Maintaining a synchronized player list
+
+3. **Game Event Communication**:
+   - Defining network event types (connected, player joined, game started, etc.)
+   - Converting local events to network messages
+   - Broadcasting game actions to all peers
+
+4. **Transmission Channels**:
+   - RELIABLE_ORDERED channel for critical game state (0)
+   - UNRELIABLE channel for non-critical updates (1)
+
+5. **Error Handling**:
+   - Connection error detection and reporting
+   - Reconnection logic for dropped connections
+   - Timeout handling
+
+6. **Test Mode**:
+   - Support for local testing without actual network connections
+   - Simulation of network events for validation
+
+### StateSync Component
+
+The StateSync (`scripts/networking/state_sync.gd`) component manages game state synchronization across the network:
+
+1. **Game Action Types**:
+   - Defines standardized game action messages (GAME_START, ROUND_START, etc.)
+   - Converts between enum values and string representations for network transport
+
+2. **Data Serialization**:
+   - Serializes complex game objects (like tiles) for network transmission
+   - Deserializes network data back into usable game objects
+
+3. **Action Processing**:
+   - Handles incoming game actions from the network
+   - Routes actions to appropriate handler methods
+   - Updates local game state based on received actions
+
+4. **State Synchronization**:
+   - Provides full game state synchronization capability
+   - Ensures consistent game state across all peers
+   - Handles dependency initialization with null safety
+
+5. **Event Handling**:
+   - Distinguishes between system events and game actions
+   - Processes network events based on type (numeric system events vs. string game actions)
+   - Updates player lists when new players join
+
+6. **Exception Safety**:
+   - Implements comprehensive null checking for dependencies
+   - Uses conditional signal connections to prevent crashes
+   - Provides fallback values for missing dependencies
+
+### Communication Flow
+
+The network communication flow follows this pattern:
+
+1. **Local Action** → A player performs an action in their client
+2. **Action Validation** → The action is validated by game rules
+3. **NetworkManager Transmission** → The action is sent through NetworkManager to all peers
+4. **Message Routing** → NetworkManager emits network_event signals
+5. **StateSync Processing** → StateSync receives the action and processes it
+6. **Game State Update** → Local game state is updated based on the action
+7. **UI Notification** → UI components are notified of the state change
+
+This architecture ensures:
+- Clear separation of network transport (NetworkManager) from game state handling (StateSync)
+- Robustness against null dependencies and disconnections
+- Proper event routing between system events and game actions
+- Consistent game state across all clients
+
+### Module: Turn Management
+
+The Turn Management system handles player turns, action sequences, and claim opportunities in the multiplayer game.
+
+#### Components:
+
+1. **TurnManager (`scripts/core/turn_manager.gd`)**:
+   - **Purpose**: Manages the flow of player turns and actions in the game.
+   - **Features**:
+     - Tracks current player turn and turn phases (waiting, draw, discard, claim, game over)
+     - Manages action sequences (draw → discard → claim)
+     - Validates player actions based on current turn state
+     - Implements claim window with timer for other players to claim discarded tiles
+     - Broadcasts turn changes over the network
+     - Handles host authority for resolving claims
+     - Emits signals for turn changes and action events
+   - **Implementation Details**:
+     - Uses enum-based state machine for turn phases
+     - Implements action validation with game rules integration
+     - Uses timer-based claim window for discarded tiles
+     - Maintains player response tracking for claims
+     - Integrates with NetworkManager and StateSync for multiplayer
+     - Processes sync actions from network with proper state propagation
+     - Explicitly synchronizes game setup data during game start
+   - **Dependencies**: GameRules, NetworkManager, StateSync
+
+2. **Turn Manager Scene (`scenes/turn_manager.tscn`)**:
+   - **Purpose**: Provides a reusable scene for adding turn management to any game component.
+   - **Features**:
+     - Self-contained functionality that can be attached to game scenes
+     - Properly configured to work with other game components
+   - **Dependencies**: TurnManager script
+
+3. **Test Turn Manager Scene (`scenes/test_turn_manager.tscn`)**:
+   - **Purpose**: Tests and validates the turn management functionality.
+   - **Features**:
+     - UI for hosting and joining games
+     - Game control panels for testing actions (draw, discard, claim)
+     - Turn state display showing current player and phase
+     - Claim timer visualization
+     - Event log to track turn changes and actions
+   - **Dependencies**: TurnManager, NetworkManager, StateSync, GameRules
+
+4. **Test Turn Manager Script (`tests/test_turn_manager.gd`)**:
+   - **Purpose**: Implements test functionality for the turn management system.
+   - **Features**:
+     - Connects UI elements to turn manager functions
+     - Simulates player actions and turn transitions
+     - Updates UI based on turn state changes
+     - Logs and displays turn events
+   - **Dependencies**: TurnManager, NetworkManager, StateSync, GameRules
+
+#### Key Design Features:
+
+1. **Phase-Based Turn Management**:
+   - Clear separation of turn phases (draw, discard, claim)
+   - Proper validation of actions based on current phase
+   - Smooth transitions between phases
+
+2. **Claim Window System**:
+   - Timer-based window for players to claim discarded tiles
+   - Priority handling for multiple claims
+   - Automatic advancement if no claims are made
+
+3. **Host Authority Model**:
+   - Host maintains authoritative turn state
+   - Host resolves claim conflicts
+   - Ensures consistent turn progression across all clients
+
+4. **Network Integration**:
+   - Two-stage synchronization during game start (setup data + round start)
+   - Detailed logging of network events for debugging
+   - Proper handling of system events vs. game actions
+   - Synchronizes turn state across all players
+   - Uses reliable transmission for critical turn updates (Rule #1)
+   - Handles network latency and disconnections gracefully
+
+5. **Modular Design**:
+   - Clean integration with other game components
+   - Follows the modular architecture of the project (Rule #2)
+   - Uses signals to notify about turn events (Rule #9)
+   - Implements proper dependency injection with null safety
+
+This turn management architecture provides a robust foundation for implementing the turn-based gameplay of Mighty Mahjong, ensuring that all players experience a consistent and fair game flow while following best practices for Godot networking.

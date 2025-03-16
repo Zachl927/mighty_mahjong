@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cixq2xr4rwolw"]
+
+[ext_resource type="Script" path="res://scripts/core/turn_manager.gd" id="1_vurmp"]
+
+[node name="TurnManager" type="Node"]
+script = ExtResource("1_vurmp") 

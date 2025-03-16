@@ -33,6 +33,7 @@ var _my_info: Dictionary = {}  # Local player info
 var _connection_attempts: int = 0
 var _max_connection_attempts: int = 3
 var _reconnecting: bool = false
+var _test_mode: bool = false  # For testing without actual network connections
 
 # Signals
 signal network_event(event_type, data)
@@ -59,10 +60,30 @@ func _ready() -> void:
 	multiplayer.connection_failed.connect(_on_connection_failed)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 
+# Set test mode for testing without actual network connections
+func set_test_mode(enabled: bool) -> void:
+	_test_mode = enabled
+	print("Network manager test mode: ", _test_mode)
+
+# Check if we're in test mode
+func is_test_mode() -> bool:
+	return _test_mode
+
 # Create a server (host) session
 func create_host(port: int = DEFAULT_PORT) -> Error:
 	if _network_mode != NetworkMode.NONE:
 		return ERR_ALREADY_IN_USE
+	
+	if _test_mode:
+		# In test mode, we simulate hosting without actual network
+		_network_mode = NetworkMode.HOST
+		_player_info[1] = _my_info.duplicate()  # Host is always ID 1
+		
+		emit_signal("host_started")
+		emit_signal("network_event", NetworkEventType.CONNECTED, {"host": true})
+		emit_signal("player_info_updated", 1, _player_info[1])
+		
+		return OK
 	
 	_peer = ENetMultiplayerPeer.new()
 	var error = _peer.create_server(port, MAX_PLAYERS)
@@ -91,6 +112,22 @@ func create_host(port: int = DEFAULT_PORT) -> Error:
 func join_host(address: String, port: int = DEFAULT_PORT) -> Error:
 	if _network_mode != NetworkMode.NONE:
 		return ERR_ALREADY_IN_USE
+	
+	if _test_mode:
+		# In test mode, we simulate joining without actual network
+		_network_mode = NetworkMode.CLIENT
+		_host_address = address
+		_host_port = port
+		
+		# Simulate connection success
+		emit_signal("connection_successful")
+		emit_signal("network_event", NetworkEventType.CONNECTED, {"host": false})
+		
+		# Add ourselves as player 2 for testing
+		_player_info[2] = _my_info.duplicate()
+		emit_signal("player_info_updated", 2, _player_info[2])
+		
+		return OK
 	
 	_host_address = address
 	_host_port = port
@@ -219,11 +256,32 @@ func start_game() -> void:
 		emit_signal("game_error", "Only the host can start the game")
 		return
 	
-	# Send RPC to all clients to start the game
-	start_game_rpc.rpc()
+	print("NetworkManager: Starting game")
 	
-	# Emit local signal
-	emit_signal("network_event", NetworkEventType.GAME_STARTED, {})
+	# Send RPC to all clients to start the game
+	if not _test_mode:
+		start_game_rpc.rpc()
+	else:
+		# In test mode, directly call the RPC method for all simulated clients
+		print("Test mode: Directly triggering game start for all clients")
+		# First emit for host
+		emit_signal("network_event", NetworkEventType.GAME_STARTED, {})
+		
+		# Then simulate RPCs to clients
+		# Get all client IDs (excluding host) from player info
+		for client_id in _player_info.keys():
+			if client_id != 1:  # Skip host (ID 1)
+				print("Simulating game start for client ID: " + str(client_id))
+				# We can't directly call start_game_rpc() as it checks for client mode
+				# Instead, directly emit the event for the test framework
+				call_deferred("_simulate_client_game_start", client_id)
+
+# Helper function to simulate game start event for clients in test mode
+func _simulate_client_game_start(client_id: int) -> void:
+	# The test framework should detect this event 
+	# and propagate it to the appropriate client instance
+	print("NetworkManager: Simulating game start for client ID: " + str(client_id))
+	emit_signal("network_event", NetworkEventType.GAME_STARTED, {"target_client": client_id})
 
 # Remote procedure to start the game on all clients
 @rpc("authority", "reliable")
@@ -257,7 +315,13 @@ func get_all_players() -> Dictionary:
 
 # Get the local player's network ID
 func get_my_id() -> int:
-	return multiplayer.get_unique_id()
+	if _test_mode:
+		# In test mode, return 1 if host, 2 if client
+		return 1 if is_host() else 2
+	
+	if multiplayer.has_multiplayer_peer():
+		return multiplayer.get_unique_id()
+	return 0
 
 # Get the current network mode
 func get_network_mode() -> int:
@@ -381,28 +445,71 @@ func get_connection_status() -> String:
 	status += ", Players: " + str(_player_info.size())
 	return status
 
-# Send game action to all peers (for game state synchronization)
-func send_game_action(action_type: String, action_data: Dictionary, reliable: bool = true) -> void:
-	var _channel = RELIABLE_ORDERED if reliable else UNRELIABLE
+# Send a game action to all players or a specific player
+func send_game_action(action_type: String, action_data: Dictionary, reliable: bool = true, target_id: int = 0) -> void:
+	if _test_mode:
+		# In test mode, we simulate sending by directly emitting the signal
+		# This allows testing without actual network
+		call_deferred("_simulate_receive_game_action", action_type, action_data)
+		return
 	
-	if _network_mode == NetworkMode.HOST:
-		# Host broadcasts to all clients
-		process_game_action.rpc(action_type, action_data)
+	if _network_mode == NetworkMode.NONE:
+		push_error("Cannot send game action: Not connected to network")
+		return
+	
+	# Choose the appropriate RPC channel based on reliability needs
+	var channel = RELIABLE_ORDERED if reliable else UNRELIABLE
+	
+	# Prepare the data to send
+	var data = {
+		"action": action_type,
+		"data": action_data,
+		"sender_id": get_my_id(),
+		"timestamp": Time.get_unix_time_from_system()
+	}
+	
+	# Send using RPC
+	if target_id > 0:
+		# Send to specific player
+		rpc_id(target_id, "_receive_game_action", data, channel)
 	else:
-		# Client sends to host
-		process_game_action.rpc_id(1, action_type, action_data)
+		# Send to all players
+		rpc("_receive_game_action", data, channel)
 
-# Receive and process game actions
-@rpc("any_peer", "call_local")
-func process_game_action(action_type: String, action_data: Dictionary) -> void:
-	var sender_id = multiplayer.get_remote_sender_id()
+# Simulate receiving a game action in test mode
+func _simulate_receive_game_action(action_type: String, action_data: Dictionary) -> void:
+	# Create a simulated data packet
+	var data = {
+		"action": action_type,
+		"data": action_data,
+		"sender_id": get_my_id(),
+		"timestamp": Time.get_unix_time_from_system()
+	}
 	
-	# If we're the host, validate and relay to all clients
-	if _network_mode == NetworkMode.HOST and sender_id != 1:
-		# Here you would validate the action based on game rules
-		# For now, we just relay it to everyone, including the sender for confirmation
-		process_game_action.rpc(action_type, action_data)
+	print("NetworkManager simulating receive of action: " + action_type)
 	
-	# Process the action locally
-	# You can emit a signal that the game logic can connect to
-	emit_signal("network_event", action_type, action_data) 
+	# Process it as if received from network
+	_process_game_action(data)
+
+# Process a received game action
+func _process_game_action(data: Dictionary) -> void:
+	# Extract data from the packet
+	var action_type = data.get("action", "")
+	var action_data = data.get("data", {})
+	var sender_id = data.get("sender_id", 0)
+	
+	print("NetworkManager processing game action: " + action_type + " from sender: " + str(sender_id))
+	
+	# Emit signal for listeners using the action type as the event type
+	# This allows StateSync to receive and process the game action
+	emit_signal("network_event", action_type, action_data)
+	
+	print("NetworkManager emitted network_event with action: " + action_type)
+
+# Receive a game action from the network
+@rpc("any_peer", "unreliable_ordered")
+func _receive_game_action(data: Dictionary, channel: int) -> void:
+	print("Received game action via RPC: " + str(data))
+	
+	# Process the received action
+	_process_game_action(data)

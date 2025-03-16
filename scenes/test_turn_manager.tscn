@@ -1,0 +1,181 @@
+[gd_scene load_steps=6 format=3 uid="uid://bvnxnxvnxnxnx"]
+
+[ext_resource type="Script" path="res://tests/test_turn_manager.gd" id="1_aaaaa"]
+[ext_resource type="Script" path="res://scripts/core/game_rules.gd" id="2_bbbbb"]
+[ext_resource type="Script" path="res://scripts/networking/network_manager.gd" id="3_ccccc"]
+[ext_resource type="Script" path="res://scripts/networking/state_sync.gd" id="4_ddddd"]
+[ext_resource type="Script" path="res://scripts/core/turn_manager.gd" id="5_eeeee"]
+
+[node name="TestTurnManager" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_aaaaa")
+
+[node name="GameRules" type="Node" parent="."]
+script = ExtResource("2_bbbbb")
+
+[node name="NetworkManager" type="Node" parent="."]
+script = ExtResource("3_ccccc")
+
+[node name="StateSync" type="Node" parent="."]
+script = ExtResource("4_ddddd")
+
+[node name="TurnManager" type="Node" parent="."]
+script = ExtResource("5_eeeee")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -250.0
+offset_right = 300.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Turn Manager Test"
+horizontal_alignment = 1
+
+[node name="Spacer1" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Ready to test turn management"
+horizontal_alignment = 1
+
+[node name="Spacer2" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="NetworkPanel" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/NetworkPanel"]
+layout_mode = 2
+text = "Network"
+horizontal_alignment = 1
+
+[node name="HostButton" type="Button" parent="VBoxContainer/HBoxContainer/NetworkPanel"]
+layout_mode = 2
+text = "Host Game"
+
+[node name="JoinButton" type="Button" parent="VBoxContainer/HBoxContainer/NetworkPanel"]
+layout_mode = 2
+text = "Join Game"
+
+[node name="IPAddressEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer/NetworkPanel"]
+layout_mode = 2
+text = "127.0.0.1"
+placeholder_text = "IP Address"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="GamePanel" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/GamePanel"]
+layout_mode = 2
+text = "Game"
+horizontal_alignment = 1
+
+[node name="StartGameButton" type="Button" parent="VBoxContainer/HBoxContainer/GamePanel"]
+layout_mode = 2
+text = "Start Game"
+
+[node name="DrawTileButton" type="Button" parent="VBoxContainer/HBoxContainer/GamePanel"]
+layout_mode = 2
+text = "Draw Tile"
+
+[node name="DiscardTileButton" type="Button" parent="VBoxContainer/HBoxContainer/GamePanel"]
+layout_mode = 2
+text = "Discard Tile"
+
+[node name="Spacer3" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ClaimPanel" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2/ClaimPanel"]
+layout_mode = 2
+text = "Claim Actions"
+horizontal_alignment = 1
+
+[node name="PengButton" type="Button" parent="VBoxContainer/HBoxContainer2/ClaimPanel"]
+layout_mode = 2
+text = "Peng"
+
+[node name="GangButton" type="Button" parent="VBoxContainer/HBoxContainer2/ClaimPanel"]
+layout_mode = 2
+text = "Gang"
+
+[node name="SkipClaimButton" type="Button" parent="VBoxContainer/HBoxContainer2/ClaimPanel"]
+layout_mode = 2
+text = "Skip Claim"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="StatusPanel" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2/StatusPanel"]
+layout_mode = 2
+text = "Game Status"
+horizontal_alignment = 1
+
+[node name="CurrentPlayerLabel" type="Label" parent="VBoxContainer/HBoxContainer2/StatusPanel"]
+layout_mode = 2
+text = "Current Player: None"
+
+[node name="CurrentPhaseLabel" type="Label" parent="VBoxContainer/HBoxContainer2/StatusPanel"]
+layout_mode = 2
+text = "Current Phase: Waiting"
+
+[node name="ClaimTimerLabel" type="Label" parent="VBoxContainer/HBoxContainer2/StatusPanel"]
+layout_mode = 2
+text = "Claim Timer: 0.0"
+
+[node name="Spacer4" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="LogLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Event Log:"
+
+[node name="EventLog" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "Turn manager test initialized"
+scroll_following = true 

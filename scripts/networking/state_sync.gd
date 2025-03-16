@@ -46,18 +46,48 @@ func initialize(p_network_manager: NetworkManager, p_game_state_manager: Node,
 	game_rules = p_game_rules
 	
 	# Connect to network manager signal for game actions
-	network_manager.network_event.connect(_on_network_event)
+	if network_manager != null:
+		if network_manager.has_signal("network_event"):
+			network_manager.network_event.connect(_on_network_event)
+		else:
+			push_warning("NetworkManager does not have 'network_event' signal")
+	else:
+		push_warning("NetworkManager dependency is null in StateSync")
 	
 	# Connect to game state manager signals
-	game_state_manager.state_changed.connect(_on_game_state_changed)
-	game_state_manager.round_started.connect(_on_round_started)
-	game_state_manager.round_ended.connect(_on_round_ended)
+	if game_state_manager != null:
+		if game_state_manager.has_signal("state_changed"):
+			game_state_manager.state_changed.connect(_on_game_state_changed)
+		else:
+			push_warning("GameStateManager does not have 'state_changed' signal")
+		
+		if game_state_manager.has_signal("round_started"):
+			game_state_manager.round_started.connect(_on_round_started)
+		else:
+			push_warning("GameStateManager does not have 'round_started' signal")
+		
+		if game_state_manager.has_signal("round_ended"):
+			game_state_manager.round_ended.connect(_on_round_ended)
+		else:
+			push_warning("GameStateManager does not have 'round_ended' signal")
+	else:
+		push_warning("GameStateManager dependency is null in StateSync")
 	
 	# Connect to game rules signals
-	game_rules.turn_changed.connect(_on_turn_changed)
-	game_rules.game_over.connect(_on_game_over)
+	if game_rules != null:
+		if game_rules.has_signal("turn_changed"):
+			game_rules.turn_changed.connect(_on_turn_changed)
+		else:
+			push_warning("GameRules does not have 'turn_changed' signal")
+		
+		if game_rules.has_signal("game_over"):
+			game_rules.game_over.connect(_on_game_over)
+		else:
+			push_warning("GameRules does not have 'game_over' signal")
+	else:
+		push_warning("GameRules dependency is null in StateSync")
 	
-	print("StateSync initialized")
+	print("StateSync initialized with safe signal connections")
 
 # Send a game action through the network manager
 func send_game_action(action_type: int, action_data: Dictionary, reliable: bool = true) -> void:
@@ -68,6 +98,7 @@ func send_game_action(action_type: int, action_data: Dictionary, reliable: bool 
 	
 	# Convert action type to string for network transmission
 	var action_type_str = GameAction.keys()[action_type]
+	print("Sending game action: " + action_type_str + " with data: " + str(action_data) + " (reliable: " + str(reliable) + ")")
 	
 	# If we're sending tile data, we need to serialize it first
 	if action_data.has("tile") and action_data.tile is Tile:
@@ -84,6 +115,7 @@ func send_game_action(action_type: int, action_data: Dictionary, reliable: bool 
 	
 	# Send the action through the network manager
 	network_manager.send_game_action(action_type_str, action_data, reliable)
+	print("Action sent to NetworkManager")
 
 # Serialize a tile for network transmission
 func _serialize_tile(tile: Tile) -> Dictionary:
@@ -123,6 +155,8 @@ func _process_game_action(action_type_str: String, action_data: Dictionary) -> v
 		sync_error.emit("Unknown game action received: " + action_type_str)
 		return
 	
+	print("StateSync processing action: " + action_type_str + " (action type ID: " + str(action_type) + ")")
+	
 	# Deserialize tile data if present
 	if action_data.has("tile") and action_data.tile is Dictionary:
 		action_data.tile = _deserialize_tile(action_data.tile)
@@ -139,9 +173,11 @@ func _process_game_action(action_type_str: String, action_data: Dictionary) -> v
 	# Process the action based on its type
 	match action_type:
 		GameAction.GAME_START:
+			print("Handling GAME_START action")
 			_handle_game_start(action_data)
 		
 		GameAction.ROUND_START:
+			print("Handling ROUND_START action")
 			_handle_round_start(action_data)
 		
 		GameAction.DRAW_TILE:
@@ -157,6 +193,7 @@ func _process_game_action(action_type_str: String, action_data: Dictionary) -> v
 			_handle_form_set(action_data)
 		
 		GameAction.SYNC_GAME_STATE:
+			print("Handling SYNC_GAME_STATE action")
 			_handle_sync_game_state(action_data)
 		
 		GameAction.WIN_HAND:
@@ -164,22 +201,32 @@ func _process_game_action(action_type_str: String, action_data: Dictionary) -> v
 	
 	# Emit signal for the received action
 	sync_action_received.emit(action_type, action_data)
+	print("Emitted sync_action_received signal for action: " + action_type_str)
 
 # Game action handlers
 
 func _handle_game_start(action_data: Dictionary) -> void:
+	print("_handle_game_start called with data: " + str(action_data))
+	
 	if network_manager.is_host():
+		print("Host received GAME_START - ignoring as host initiated this")
 		return  # Host initiated this, no need to process
 	
 	# Update game state with received data
 	if action_data.has("game_id"):
 		game_state_data.game_id = action_data.game_id
+		print("Updated game_id to: " + action_data.game_id)
 	
 	if action_data.has("players"):
 		game_state_data.players = action_data.players
+		print("Updated players list to: " + str(action_data.players))
 	
 	# Transition game state to SETUP
-	game_state_manager.change_state(game_state_manager.GameState.SETUP)
+	if game_state_manager != null:
+		print("Transitioning game state to SETUP")
+		game_state_manager.change_state(game_state_manager.GameState.SETUP)
+	else:
+		print("Cannot transition to SETUP state: GameStateManager is null")
 
 func _handle_round_start(action_data: Dictionary) -> void:
 	if network_manager.is_host():
@@ -273,9 +320,12 @@ func _handle_form_set(action_data: Dictionary) -> void:
 		pass
 
 func _handle_sync_game_state(action_data: Dictionary) -> void:
+	print("_handle_sync_game_state called with data: " + str(action_data))
+	
 	# Handle a full game state synchronization (usually sent by host)
 	if action_data.has("game_state"):
 		var new_state = action_data.game_state
+		print("Received new game state: " + str(new_state))
 		
 		# Update all local game state data
 		game_state_data = new_state.duplicate(true)
@@ -283,21 +333,26 @@ func _handle_sync_game_state(action_data: Dictionary) -> void:
 		# Apply state changes to game managers
 		
 		# Update game state
-		if new_state.has("current_state"):
+		if new_state.has("current_state") and game_state_manager != null:
 			var state_id = new_state.current_state
+			print("Updating game state to: " + str(state_id))
 			if game_state_manager.current_state != state_id:
 				game_state_manager.change_state(state_id)
 		
 		# Update round
-		if new_state.has("current_round"):
+		if new_state.has("current_round") and game_state_manager != null:
+			print("Updating current round to: " + str(new_state.current_round))
 			game_state_manager.current_round = new_state.current_round
 		
 		# Update turn state
-		if new_state.has("current_player_index") and new_state.has("current_turn_state"):
+		if new_state.has("current_player_index") and new_state.has("current_turn_state") and game_rules != null:
+			print("Updating turn state - player: " + str(new_state.current_player_index) + ", turn: " + str(new_state.current_turn_state))
 			# TODO: Update game rules turn state
-			pass
+	else:
+		print("Warning: Received sync_game_state without game_state data")
 	
 	sync_completed.emit()
+	print("Emitted sync_completed signal")
 
 func _handle_win_hand(action_data: Dictionary) -> void:
 	# Handle a player winning the hand
@@ -314,10 +369,18 @@ func _handle_win_hand(action_data: Dictionary) -> void:
 	}
 	
 	# Transition to scoring state
-	game_state_manager.change_state(game_state_manager.GameState.SCORING)
+	if game_state_manager != null:
+		var scoring_state = game_state_manager.GameState.SCORING if game_state_manager.has_method("GameState") else 3 # Fallback value
+		game_state_manager.change_state(scoring_state)
+	else:
+		push_warning("Cannot transition to scoring state: GameStateManager not initialized")
 
 # Send a full game state sync to all clients
 func send_full_game_state_sync() -> void:
+	if network_manager == null:
+		push_error("Cannot send game state sync: NetworkManager not initialized")
+		return
+		
 	if not network_manager.is_host():
 		push_error("Only host can send full game state sync")
 		return
@@ -335,8 +398,9 @@ func _prepare_full_game_state() -> Dictionary:
 	var state = game_state_data.duplicate(true)
 	
 	# Update with current values from managers
-	state.current_state = game_state_manager.current_state
-	state.current_round = game_state_manager.current_round
+	if game_state_manager != null:
+		state.current_state = game_state_manager.current_state
+		state.current_round = game_state_manager.current_round
 	
 	if game_rules:
 		state.current_player_index = game_rules._current_player_index
@@ -350,9 +414,39 @@ func _prepare_full_game_state() -> Dictionary:
 # Signal Handlers
 
 func _on_network_event(event_type, data) -> void:
-	# Check if this is a game action event
+	# Add detailed logging
+	print("StateSync received network event: " + str(event_type) + " with data: " + str(data))
+	
+	# If event_type is a number, it's a system event from NetworkManager.NetworkEventType enum
+	if event_type is int:
+		# Handle system events if needed
+		match event_type:
+			NetworkManager.NetworkEventType.CONNECTED:
+				print("Connection event received")
+				# Handle new connection if needed
+				if network_manager.is_host() and data.has("peer_id"):
+					print("New peer connected: " + str(data.peer_id))
+				elif data.has("host") and not data.host:
+					print("Successfully connected to host")
+					
+			NetworkManager.NetworkEventType.PLAYER_JOINED:
+				print("Player joined: " + str(data.id) if data.has("id") else "unknown")
+				# Update our player list if needed
+				if data.has("id") and data.has("info"):
+					if not game_state_data.players.has(data.id):
+						game_state_data.players.append(data.id)
+						print("Updated players list: " + str(game_state_data.players))
+			
+			NetworkManager.NetworkEventType.GAME_STARTED:
+				print("Game start event received, waiting for game state sync")
+		return
+	
+	# Otherwise, it should be a game action string
 	if GameAction.keys().has(event_type):
+		print("Processing game action: " + event_type)
 		_process_game_action(event_type, data)
+	else:
+		print("Ignoring event - not a recognized game action: " + str(event_type))
 
 func _on_game_state_changed(from_state, to_state) -> void:
 	# Update local game state
@@ -383,10 +477,11 @@ func _on_round_started(round_number) -> void:
 
 func _on_round_ended(round_number, scores) -> void:
 	# If we're the host, send round end data
-	if network_manager and network_manager.is_host():
+	if network_manager and network_manager.is_host() and game_state_manager != null:
+		var scoring_state = game_state_manager.GameState.SCORING if game_state_manager.has_method("GameState") else 3 # Fallback value
 		send_game_action(GameAction.SYNC_GAME_STATE, {
 			"game_state": {
-				"current_state": game_state_manager.GameState.SCORING,
+				"current_state": scoring_state,
 				"scores": scores
 			}
 		})
